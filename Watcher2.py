@@ -173,10 +173,23 @@ def af_report(bot, change):
         pageLink = change["meta"]["uri"]
         space = u"\u200B"
         editor = change["user"][:2] + space + change["user"][2:]
-        logLink = change["server_url"] + "/wiki/Special:AbuseLog/" + change["log_params"]["log"]
+        logLink = (
+            change["server_url"]
+            + "/wiki/Special:AbuseLog/"
+            + change["log_params"]["log"]
+        )
         filterNumber = change["log_params"]["filter"]
 
-        report = "Abuse Filter " + filterNumber + " was activated by " + editor + " at " + pageLink + " " + logLink
+        report = (
+            "Abuse Filter "
+            + filterNumber
+            + " was activated by "
+            + editor
+            + " at "
+            + pageLink
+            + " "
+            + logLink
+        )
 
         if report is not None:
             for chan in channel:
@@ -229,12 +242,7 @@ def cssjs(bot, change):
 
 
 def checkpage(change):
-    sendLog = {
-        "watcher": False,
-        "stalk": False,
-        "rc_feed": False,
-        "af_feed": False
-    }
+    sendLog = {"watcher": False, "stalk": False, "rc_feed": False, "af_feed": False}
 
     proj = change["wiki"]
 
@@ -268,10 +276,10 @@ def checkpage(change):
         sendLog["stalk"] = True
 
     if len(RC_exists) > 0:
-        sendLog['rc_feed'] = True
+        sendLog["rc_feed"] = True
 
     if len(AF_exists) > 0:
-        sendLog['af_feed'] = True
+        sendLog["af_feed"] = True
 
     return sendLog
 
@@ -325,8 +333,8 @@ def global_edit(bot, change):
         for chan in channels:
             nicks = ""
             pgNicks = c.execute(
-                '''SELECT nick from global_watch where title=? and namespace=? and channel=? and notify="on";''',
-                (title, chNamespace, chan)
+                """SELECT nick from global_watch where title=? and namespace=? and channel=? and notify="on";""",
+                (title, chNamespace, chan),
             ).fetchall()
 
             if len(pgNicks) > 0:
@@ -418,7 +426,9 @@ def edit_send(bot, change):
     # This will always only be a wiki name ie enwiki, ptwiki, etc
     # The only source is the EventStream so can be considered "safe"
     checkquery = """SELECT * FROM %s where page=?;""" % proj
-    nickquery = """SELECT nick from %s where page=? and channel=? and notify="on";""" % proj
+    nickquery = (
+        """SELECT nick from %s where page=? and channel=? and notify="on";""" % proj
+    )
 
     db = sqlite3.connect(DB)
     c = db.cursor()
@@ -534,6 +544,7 @@ def watcherAdd(msg, nick, chan):
     c = db.cursor()
 
     action, project, page = msg.split(" ", 2)
+    project = project.replace(";", " ")  # 7/11 Special to avoid injection
 
     checkTable = c.execute(checkquery, (project,)).fetchone()
     if checkTable[0] == 0:
@@ -545,7 +556,9 @@ def watcherAdd(msg, nick, chan):
             db.commit()
         except Exception as e:
             response = (
-                "Ugh... Something blew up creating the table. " + bot.settings.core.owner + " help me. "
+                "Ugh... Something blew up creating the table. "
+                + bot.settings.core.owner
+                + " help me. "
                 + str(e)
             )
             db.close()
@@ -557,7 +570,9 @@ def watcherAdd(msg, nick, chan):
             response = (
                 "Ugh... Something blew up finding the new table: ("
                 + check
-                + ") " + bot.settings.core.owner + " help me."
+                + ") "
+                + bot.settings.core.owner
+                + " help me."
             )
             db.close()
             return response
@@ -577,7 +592,9 @@ def watcherAdd(msg, nick, chan):
             response = (
                 "Ugh... Something blew up adding the page to the table: "
                 + str(e)
-                + ". " + bot.settings.core.owner + " help me."
+                + ". "
+                + bot.settings.core.owner
+                + " help me."
             )
             db.close()
             return response
@@ -630,7 +647,9 @@ def watcherDel(msg, nick, chan):
                 % (nick, page, project)
             )
         except:
-            response = "Ugh... Something blew up. " + bot.settings.core.owner + " help me."
+            response = (
+                "Ugh... Something blew up. " + bot.settings.core.owner + " help me."
+            )
     else:
         response = (
             "%s: it doesn't look like I'm reporting changes to %s on %s in this channel for you."
@@ -695,7 +714,9 @@ def globalWatcherAdd(msg, nick, chan):
             response = (
                 "Ugh... Something blew up adding the page to the table: "
                 + str(e)
-                + ". " + bot.settings.core.owner + " help me."
+                + ". "
+                + bot.settings.core.owner
+                + " help me."
             )
             db.close()
             return response
@@ -811,6 +832,7 @@ def globalWatcherPing(msg, nick, chan):
     db.close()
 
     return response
+
 
 def rc_feed(bot, change):
     proj = change["wiki"]
@@ -1028,25 +1050,25 @@ def rc_feed(bot, change):
 
             if change["type"] == "edit":
                 report = (
-                        "\x02"
-                        + title
-                        + "\x02 was edited by \x02"
-                        + editor
-                        + "\x02 "
-                        + chDiff
-                        + " "
-                        + chComment
+                    "\x02"
+                    + title
+                    + "\x02 was edited by \x02"
+                    + editor
+                    + "\x02 "
+                    + chDiff
+                    + " "
+                    + chComment
                 )
             elif change["type"] == "new":
                 report = (
-                        "\x02"
-                        + title
-                        + "\x02 was created by \x02"
-                        + editor
-                        + "\x02 "
-                        + chDiff
-                        + " "
-                        + chComment
+                    "\x02"
+                    + title
+                    + "\x02 was created by \x02"
+                    + editor
+                    + "\x02 "
+                    + chDiff
+                    + " "
+                    + chComment
                 )
 
         if report is not None:
@@ -1071,7 +1093,7 @@ def feedadmin(bot, trigger):
     c = db.cursor()
 
     try:
-        action, target = trigger.group(2).split(' ', 1)
+        action, target = trigger.group(2).split(" ", 1)
     except ValueError:
         db.close()
         bot.say(badcommand)
@@ -1089,7 +1111,10 @@ def feedadmin(bot, trigger):
             if len(checkagain) > 0:
                 bot.say(target + " added as a feed admin in " + trigger.sender)
             else:
-                bot.say("Error inserting new feed admin. Notifying " + bot.settings.core.owner)
+                bot.say(
+                    "Error inserting new feed admin. Notifying "
+                    + bot.settings.core.owner
+                )
         else:
             db.close()
             bot.say(target + " is already a feed_admin in this channel.")
@@ -1107,12 +1132,14 @@ def feedadmin(bot, trigger):
             if len(checkagain) == 0:
                 bot.say(target + " removed from feed admins in " + trigger.sender)
             else:
-                bot.say("Error removing feed admin. Notifying " + bot.settings.core.owner)
+                bot.say(
+                    "Error removing feed admin. Notifying " + bot.settings.core.owner
+                )
         else:
             bot.say(target + " doesn't appear to be a feed admin in this channel.")
 
     elif action.lower() == "list":
-        check = c.execute (
+        check = c.execute(
             """SELECT nick FROM feed_admins WHERE channel=?;""", (trigger.sender,)
         ).fetchall()
 
@@ -1126,6 +1153,7 @@ def feedadmin(bot, trigger):
 
     db.close()
 
+
 @plugin.command("speak")
 def watcherSpeak(bot, trigger):
     db = sqlite3.connect(DB)
@@ -1137,7 +1165,15 @@ def watcherSpeak(bot, trigger):
 
     if len(doesExist) > 0:
         try:
-            if len(c.execute("""SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""", (trigger.account, trigger.sender)).fetchall()) > 0:
+            if (
+                len(
+                    c.execute(
+                        """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""",
+                        (trigger.account, trigger.sender),
+                    ).fetchall()
+                )
+                > 0
+            ):
                 c.execute(
                     """DELETE FROM hushchannels WHERE channel=?;""", (trigger.sender,)
                 )
@@ -1158,6 +1194,7 @@ def watcherSpeak(bot, trigger):
 @plugin.command("mute")
 def watcherHush(bot, trigger):
     import time
+
     db = sqlite3.connect(DB)
     c = db.cursor()
     now = time.time()
@@ -1189,24 +1226,34 @@ def watcherHush(bot, trigger):
                     )
                     db.commit()
                     check = c.execute(
-                        """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
+                        """SELECT * FROM hushchannels WHERE channel=?;""",
+                        (trigger.sender,),
                     ).fetchall()[0]
                     chan, nick, time = check
                     bot.say(nick + " hushed! " + time)
                     db.close()
                 except:
-                    bot.say("Ugh... something blew up. Help me " + bot.settings.core.owner)
+                    bot.say(
+                        "Ugh... something blew up. Help me " + bot.settings.core.owner
+                    )
 
-        elif len(c.execute("""SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""", (trigger.account, trigger.sender)).fetchall()) > 0:
+        elif (
+            len(
+                c.execute(
+                    """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""",
+                    (trigger.account, trigger.sender),
+                ).fetchall()
+            )
+            > 0
+        ):
             try:
                 c.execute(
                     """INSERT INTO hushchannels VALUES(?, ?, ?);""",
-                    (trigger.sender, trigger.account, timestamp)
+                    (trigger.sender, trigger.account, timestamp),
                 )
                 db.commit()
                 check = c.execute(
-                    """SELECT * FROM hushchannels WHERE channel=?;""",
-                    (trigger.sender,)
+                    """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
                 ).fetchall()[0]
                 chan, nick, time = check
                 bot.say(nick + " hushed! " + time)
@@ -1287,7 +1334,8 @@ def addGS(bot, trigger):
     db = sqlite3.connect(DB)
     c = db.cursor()
     c.execute(
-        """INSERT INTO globalsysops VALUES(?, ?);""", (trigger.group(3), trigger.group(4))
+        """INSERT INTO globalsysops VALUES(?, ?);""",
+        (trigger.group(3), trigger.group(4)),
     )
     db.commit()
     nickCheck = c.execute(
