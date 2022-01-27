@@ -176,7 +176,7 @@ def af_report(bot, change):
         logLink = (
             change["server_url"]
             + "/wiki/Special:AbuseLog/"
-            + change["log_params"]["log"]
+            + str(change["log_params"]["log"])
         )
         filterNumber = change["log_params"]["filter"]
 
@@ -1088,6 +1088,7 @@ def feedadmin(bot, trigger):
     insertnew = """INSERT INTO feed_admins VALUES(?, ?);"""
     deladmin = """DELETE FROM feed_admins WHERE nick=? AND channel=?;"""
     badcommand = "Invalid command. !feedadmin {add/del/list} <targetAccount>"
+    admins = ""
 
     db = sqlite3.connect(DB)
     c = db.cursor()
@@ -1095,8 +1096,7 @@ def feedadmin(bot, trigger):
     try:
         action, target = trigger.group(2).split(" ", 1)
     except ValueError:
-        db.close()
-        bot.say(badcommand)
+        action = trigger.group(2)
         return
 
     if action.lower() == "add":
