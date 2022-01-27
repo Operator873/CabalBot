@@ -836,7 +836,7 @@ def globalWatcherPing(msg, nick, chan):
 
 def rc_feed(bot, change):
     proj = change["wiki"]
-
+    report = None
     db = sqlite3.connect(DB)
     c = db.cursor()
 
@@ -1073,10 +1073,10 @@ def rc_feed(bot, change):
 
         if report is not None:
             for chan in channel:
-                if check_hush(chan) is True:
+                if check_hush(chan[0]) is True:
                     return
                 else:
-                    bot.say(report, chan)
+                    bot.say(report, chan[0])
 
 
 @plugin.require_admin(message=BOTADMINMSG)
