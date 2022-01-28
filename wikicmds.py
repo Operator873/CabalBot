@@ -7,15 +7,16 @@ from sopel import plugin
 @plugin.command("block")
 def block(bot, trigger):
     # !block <project> <target>
-    wiki = re.search("wiki$", trigger.group(3))
-    wikibooks = re.search("wikibooks$", trigger.group(3))
-    wikimedia = re.search("wikimedia$", trigger.group(3))
-    wikinews = re.search("wikinews$", trigger.group(3))
-    wikiquote = re.search("wikiquote$", trigger.group(3))
-    wikisource = re.search("wikisource$", trigger.group(3))
-    wikiversity = re.search("wikiversity$", trigger.group(3))
-    wikivoyage = re.search("wikivoyage$", trigger.group(3))
-    wiktionary = re.search("wiktionary$", trigger.group(3))
+    project = re.sub(r'\.', "", trigger.group(3))
+
+    wikibooks = re.search("wikibooks$", project)
+    wikimedia = re.search("wikimedia$", project)
+    wikinews = re.search("wikinews$", project)
+    wikiquote = re.search("wikiquote$", project)
+    wikisource = re.search("wikisource$", project)
+    wikiversity = re.search("wikiversity$", project)
+    wikivoyage = re.search("wikivoyage$", project)
+    wiktionary = re.search("wiktionary$", project)
 
     count = len(trigger.group)
     i = 4
@@ -27,59 +28,55 @@ def block(bot, trigger):
 
     target = target.replace(" ", "_")
 
-    if wiki:
-        lang = re.split("wiki$", wiki.string)[0]
-        lang = lang.replace("_", "-")
-        if lang is "commons":
-            bot.say("Sysop block link: https://commons.wikimedia.org/wiki/Special:Block/" + target)
-        elif lang is "incubator":
-            bot.say("Sysop block link: https://incubator.wikimedia.org/wiki/Special:Block/" + target)
-        elif lang is "mediawiki":
-            bot.say("Sysop block link: https://www.mediawiki.org/wiki/Special:Block/" + target)
-        elif lang is "outreach":
-            bot.say("Sysop block link: https://outreach.wikimedia.org/wiki/Special:Block/" + target)
-        elif lang is "sources":
-            bot.say("Sysop block link: https://www.wikisource.org/wiki/Special:Block/" + target)
-        elif lang is "species":
-            bot.say("Sysop block link: https://species.wikimedia.org/wiki/Special:Block/" + target)
-        elif lang is "wikidata":
-            bot.say("Sysop block link: https://www.wikidata.org/wiki/Special:Block/" + target)
-        else:
-            bot.say("Sysop block link: https://" + lang + ".wikipedia.org/wiki/Special:Block/" + target)
-    elif wikibooks:
-        lang = re.split("wikibooks$", wiki.string)[0]
+    if wikibooks:
+        lang = re.split("wikibooks$", wikibooks.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikibooks.org/wiki/Special:Block/" + target)
     elif wikimedia:
-        lang = re.split("wikimedia$", wiki.string)[0]
+        lang = re.split("wikimedia$", wikimedia.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikimedia.org/wiki/Special:Block/" + target)
     elif wikinews:
-        lang = re.split("wikinews$", wiki.string)[0]
+        lang = re.split("wikinews$", wikinews.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikinews.org/wiki/Special:Block/" + target)
     elif wikiquote:
-        lang = re.split("wikiquote$", wiki.string)[0]
+        lang = re.split("wikiquote$", wikiquote.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikiquote.org/wiki/Special:Block/" + target)
     elif wikisource:
-        lang = re.split("wikisource$", wiki.string)[0]
+        lang = re.split("wikisource$", wikisource.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikisource.org/wiki/Special:Block/" + target)
     elif wikiversity:
-        lang = re.split("wikiversity$", wiki.string)[0]
+        lang = re.split("wikiversity$", wikiversity.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikiversity.org/wiki/Special:Block/" + target)
     elif wikivoyage:
-        lang = re.split("wikivoyage$", wiki.string)[0]
+        lang = re.split("wikivoyage$", wikivoyage.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wikivoyage.org/wiki/Special:Block/" + target)
     elif wiktionary:
-        lang = re.split("wiktionary$", wiki.string)[0]
+        lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("Sysop block link: https://" + lang + ".wiktionary.org/wiki/Special:Block/" + target)
+    elif project is "commons":
+        bot.say("Sysop block link: https://commons.wikimedia.org/wiki/Special:Block/" + target)
+    elif project is "incubator":
+        bot.say("Sysop block link: https://incubator.wikimedia.org/wiki/Special:Block/" + target)
+    elif project is "mediawiki":
+        bot.say("Sysop block link: https://www.mediawiki.org/wiki/Special:Block/" + target)
+    elif project is "outreach":
+        bot.say("Sysop block link: https://outreach.wikimedia.org/wiki/Special:Block/" + target)
+    elif project is "sources":
+        bot.say("Sysop block link: https://www.wikisource.org/wiki/Special:Block/" + target)
+    elif project is "species":
+        bot.say("Sysop block link: https://species.wikimedia.org/wiki/Special:Block/" + target)
+    elif project is "wikidata":
+        bot.say("Sysop block link: https://www.wikidata.org/wiki/Special:Block/" + target)
     else:
-        bot.say("Invalid project name.")
+        lang = project.replace("_", "-")
+        bot.say("Sysop block link: https://" + lang + ".wikipedia.org/wiki/Special:Block/" + target)
 
 
 @plugin.command("bullseye")
@@ -99,15 +96,16 @@ def ca(bot, trigger):
 @plugin.command("contribs")
 def contribs(bot, trigger):
     # !contribs <project> <target>
-    wiki = re.search("wiki$", trigger.group(3))
-    wikibooks = re.search("wikibooks$", trigger.group(3))
-    wikimedia = re.search("wikimedia$", trigger.group(3))
-    wikinews = re.search("wikinews$", trigger.group(3))
-    wikiquote = re.search("wikiquote$", trigger.group(3))
-    wikisource = re.search("wikisource$", trigger.group(3))
-    wikiversity = re.search("wikiversity$", trigger.group(3))
-    wikivoyage = re.search("wikivoyage$", trigger.group(3))
-    wiktionary = re.search("wiktionary$", trigger.group(3))
+    project = re.sub(r'\.', "", trigger.group(3))
+
+    wikibooks = re.search("wikibooks$", project)
+    wikimedia = re.search("wikimedia$", project)
+    wikinews = re.search("wikinews$", project)
+    wikiquote = re.search("wikiquote$", project)
+    wikisource = re.search("wikisource$", project)
+    wikiversity = re.search("wikiversity$", project)
+    wikivoyage = re.search("wikivoyage$", project)
+    wiktionary = re.search("wiktionary$", project)
 
     count = len(trigger.group)
     i = 4
@@ -119,59 +117,55 @@ def contribs(bot, trigger):
 
     target = target.replace(" ", "_")
 
-    if wiki:
-        lang = re.split("wiki$", wiki.string)[0]
-        lang = lang.replace("_", "-")
-        if lang is "commons":
-            bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif lang is "incubator":
-            bot.say("User contribs: https://incubator.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif lang is "mediawiki":
-            bot.say("User contribs: https://www.mediawiki.org/wiki/Special:Contribs/" + target)
-        elif lang is "outreach":
-            bot.say("User contribs: https://outreach.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif lang is "sources":
-            bot.say("User contribs: https://www.wikisource.org/wiki/Special:Contribs/" + target)
-        elif lang is "species":
-            bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif lang is "wikidata":
-            bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
-        else:
-            bot.say("User contribs: https://" + lang + ".wikipedia.org/wiki/Special:Contribs/" + target)
-    elif wikibooks:
-        lang = re.split("wikibooks$", wiki.string)[0]
+    if wikibooks:
+        lang = re.split("wikibooks$", wikibooks.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikibooks.org/wiki/Special:Contribs/" + target)
     elif wikimedia:
-        lang = re.split("wikimedia$", wiki.string)[0]
+        lang = re.split("wikimedia$", wikimedia.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikimedia.org/wiki/Special:Contribs/" + target)
     elif wikinews:
-        lang = re.split("wikinews$", wiki.string)[0]
+        lang = re.split("wikinews$", wikinews.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikinews.org/wiki/Special:Contribs/" + target)
     elif wikiquote:
-        lang = re.split("wikiquote$", wiki.string)[0]
+        lang = re.split("wikiquote$", wikiquote.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikiquote.org/wiki/Special:Contribs/" + target)
     elif wikisource:
-        lang = re.split("wikisource$", wiki.string)[0]
+        lang = re.split("wikisource$", wikisource.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikisource.org/wiki/Special:Contribs/" + target)
     elif wikiversity:
-        lang = re.split("wikiversity$", wiki.string)[0]
+        lang = re.split("wikiversity$", wikiversity.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikiversity.org/wiki/Special:Contribs/" + target)
     elif wikivoyage:
-        lang = re.split("wikivoyage$", wiki.string)[0]
+        lang = re.split("wikivoyage$", wikivoyage.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wikivoyage.org/wiki/Special:Contribs/" + target)
     elif wiktionary:
-        lang = re.split("wiktionary$", wiki.string)[0]
+        lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User contribs: https://" + lang + ".wiktionary.org/wiki/Special:Contribs/" + target)
+    elif project is "commons":
+        bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
+    elif project is "incubator":
+        bot.say("User contribs: https://incubator.wikimedia.org/wiki/Special:Contribs/" + target)
+    elif project is "mediawiki":
+        bot.say("User contribs: https://www.mediawiki.org/wiki/Special:Contribs/" + target)
+    elif project is "outreach":
+        bot.say("User contribs: https://outreach.wikimedia.org/wiki/Special:Contribs/" + target)
+    elif project is "sources":
+        bot.say("User contribs: https://www.wikisource.org/wiki/Special:Contribs/" + target)
+    elif project is "species":
+        bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
+    elif project is "wikidata":
+        bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
     else:
-        bot.say("Invalid project name.")
+        lang = project.replace("_", "-")
+        bot.say("User contribs: https://" + lang + ".wikipedia.org/wiki/Special:Contribs/" + target)
 
 
 @plugin.command("geo")
@@ -212,15 +206,16 @@ def ipqs(bot, trigger):
 @plugin.command("link")
 def link(bot, trigger):
     # !link <project> <target>
-    wiki = re.search("wiki$", trigger.group(3))
-    wikibooks = re.search("wikibooks$", trigger.group(3))
-    wikimedia = re.search("wikimedia$", trigger.group(3))
-    wikinews = re.search("wikinews$", trigger.group(3))
-    wikiquote = re.search("wikiquote$", trigger.group(3))
-    wikisource = re.search("wikisource$", trigger.group(3))
-    wikiversity = re.search("wikiversity$", trigger.group(3))
-    wikivoyage = re.search("wikivoyage$", trigger.group(3))
-    wiktionary = re.search("wiktionary$", trigger.group(3))
+    project = re.sub(r'\.', "", trigger.group(3))
+
+    wikibooks = re.search("wikibooks$", project)
+    wikimedia = re.search("wikimedia$", project)
+    wikinews = re.search("wikinews$", project)
+    wikiquote = re.search("wikiquote$", project)
+    wikisource = re.search("wikisource$", project)
+    wikiversity = re.search("wikiversity$", project)
+    wikivoyage = re.search("wikivoyage$", project)
+    wiktionary = re.search("wiktionary$", project)
 
     count = len(trigger.group)
     i = 4
@@ -232,73 +227,70 @@ def link(bot, trigger):
 
     target = target.replace(" ", "_")
 
-    if wiki:
-        lang = re.split("wiki$", wiki.string)[0]
-        lang = lang.replace("_", "-")
-        if lang is "commons":
-            bot.say("https://commons.wikimedia.org/wiki/" + target)
-        elif lang is "incubator":
-            bot.say("https://incubator.wikimedia.org/wiki/" + target)
-        elif lang is "mediawiki":
-            bot.say("https://www.mediawiki.org/wiki/" + target)
-        elif lang is "outreach":
-            bot.say("https://outreach.wikimedia.org/wiki/" + target)
-        elif lang is "sources":
-            bot.say("https://www.wikisource.org/wiki/" + target)
-        elif lang is "species":
-            bot.say("https://species.wikimedia.org/wiki/" + target)
-        elif lang is "wikidata":
-            bot.say("https://www.wikidata.org/wiki/" + target)
-        else:
-            bot.say("https://" + lang + ".wikipedia.org/wiki/" + target)
-    elif wikibooks:
-        lang = re.split("wikibooks$", wiki.string)[0]
+    if wikibooks:
+        lang = re.split("wikibooks$", wikibooks.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikibooks.org/wiki/" + target)
     elif wikimedia:
-        lang = re.split("wikimedia$", wiki.string)[0]
+        lang = re.split("wikimedia$", wikimedia.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikimedia.org/wiki/" + target)
     elif wikinews:
-        lang = re.split("wikinews$", wiki.string)[0]
+        lang = re.split("wikinews$", wikinews.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikinews.org/wiki/" + target)
     elif wikiquote:
-        lang = re.split("wikiquote$", wiki.string)[0]
+        lang = re.split("wikiquote$", wikiquote.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikiquote.org/wiki/" + target)
     elif wikisource:
-        lang = re.split("wikisource$", wiki.string)[0]
+        lang = re.split("wikisource$", wikisource.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikisource.org/wiki/" + target)
     elif wikiversity:
-        lang = re.split("wikiversity$", wiki.string)[0]
+        lang = re.split("wikiversity$", wikiversity.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikiversity.org/wiki/" + target)
     elif wikivoyage:
-        lang = re.split("wikivoyage$", wiki.string)[0]
+        lang = re.split("wikivoyage$", wikivoyage.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wikivoyage.org/wiki/" + target)
     elif wiktionary:
-        lang = re.split("wiktionary$", wiki.string)[0]
+        lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("https://" + lang + ".wiktionary.org/wiki/" + target)
+    elif project is "commons":
+        bot.say("https://commons.wikimedia.org/wiki/" + target)
+    elif project is "incubator":
+        bot.say("https://incubator.wikimedia.org/wiki/" + target)
+    elif project is "mediawiki":
+        bot.say("https://www.mediawiki.org/wiki/" + target)
+    elif project is "outreach":
+        bot.say("https://outreach.wikimedia.org/wiki/" + target)
+    elif project is "sources":
+        bot.say("https://www.wikisource.org/wiki/" + target)
+    elif project is "species":
+        bot.say("https://species.wikimedia.org/wiki/" + target)
+    elif project is "wikidata":
+        bot.say("https://www.wikidata.org/wiki/" + target)
     else:
-        bot.say("Invalid project name.")
+        lang = project.replace("_", "-")
+        bot.say("https://" + lang + ".wikipedia.org/wiki/" + target)
 
 
 @plugin.command("log")
 def log(bot, trigger):
     # !log <project> <target>
-    wiki = re.search("wiki$", trigger.group(3))
-    wikibooks = re.search("wikibooks$", trigger.group(3))
-    wikimedia = re.search("wikimedia$", trigger.group(3))
-    wikinews = re.search("wikinews$", trigger.group(3))
-    wikiquote = re.search("wikiquote$", trigger.group(3))
-    wikisource = re.search("wikisource$", trigger.group(3))
-    wikiversity = re.search("wikiversity$", trigger.group(3))
-    wikivoyage = re.search("wikivoyage$", trigger.group(3))
-    wiktionary = re.search("wiktionary$", trigger.group(3))
+    project = re.sub(r'\.', "", trigger.group(3))
+
+    wikibooks = re.search("wikibooks$", project)
+    wikimedia = re.search("wikimedia$", project)
+    wikinews = re.search("wikinews$", project)
+    wikiquote = re.search("wikiquote$", project)
+    wikisource = re.search("wikisource$", project)
+    wikiversity = re.search("wikiversity$", project)
+    wikivoyage = re.search("wikivoyage$", project)
+    wiktionary = re.search("wiktionary$", project)
 
     count = len(trigger.group)
     i = 4
@@ -310,59 +302,55 @@ def log(bot, trigger):
 
     target = target.replace(" ", "_")
 
-    if wiki:
-        lang = re.split("wiki$", wiki.string)[0]
-        lang = lang.replace("_", "-")
-        if lang is "commons":
-            bot.say("User logs: https://commons.wikimedia.org/wiki/Special:Log/" + target)
-        elif lang is "incubator":
-            bot.say("User logs: https://incubator.wikimedia.org/wiki/Special:Log/" + target)
-        elif lang is "mediawiki":
-            bot.say("User logs: https://www.mediawiki.org/wiki/Special:Log/" + target)
-        elif lang is "outreach":
-            bot.say("User logs: https://outreach.wikimedia.org/wiki/Special:Log/" + target)
-        elif lang is "sources":
-            bot.say("User logs: https://www.wikisource.org/wiki/Special:Log/" + target)
-        elif lang is "species":
-            bot.say("User logs: https://species.wikimedia.org/wiki/Special:Log/" + target)
-        elif lang is "wikidata":
-            bot.say("User logs: https://www.wikidata.org/wiki/Special:Log/" + target)
-        else:
-            bot.say("User logs: https://" + lang + ".wikipedia.org/wiki/Special:Log/" + target)
-    elif wikibooks:
-        lang = re.split("wikibooks$", wiki.string)[0]
+    if wikibooks:
+        lang = re.split("wikibooks$", wikibooks.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikibooks.org/wiki/Special:Log/" + target)
     elif wikimedia:
-        lang = re.split("wikimedia$", wiki.string)[0]
+        lang = re.split("wikimedia$", wikimedia.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikimedia.org/wiki/Special:Log/" + target)
     elif wikinews:
-        lang = re.split("wikinews$", wiki.string)[0]
+        lang = re.split("wikinews$", wikinews.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikinews.org/wiki/Special:Log/" + target)
     elif wikiquote:
-        lang = re.split("wikiquote$", wiki.string)[0]
+        lang = re.split("wikiquote$", wikiquote.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikiquote.org/wiki/Special:Log/" + target)
     elif wikisource:
-        lang = re.split("wikisource$", wiki.string)[0]
+        lang = re.split("wikisource$", wikisource.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikisource.org/wiki/Special:Log/" + target)
     elif wikiversity:
-        lang = re.split("wikiversity$", wiki.string)[0]
+        lang = re.split("wikiversity$", wikiversity.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikiversity.org/wiki/Special:Log/" + target)
     elif wikivoyage:
-        lang = re.split("wikivoyage$", wiki.string)[0]
+        lang = re.split("wikivoyage$", wikivoyage.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wikivoyage.org/wiki/Special:Log/" + target)
     elif wiktionary:
-        lang = re.split("wiktionary$", wiki.string)[0]
+        lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("User logs: https://" + lang + ".wiktionary.org/wiki/Special:Log/" + target)
+    elif project is "commons":
+        bot.say("User logs: https://commons.wikimedia.org/wiki/Special:Log/" + target)
+    elif project is "incubator":
+        bot.say("User logs: https://incubator.wikimedia.org/wiki/Special:Log/" + target)
+    elif project is "mediawiki":
+        bot.say("User logs: https://www.mediawiki.org/wiki/Special:Log/" + target)
+    elif project is "outreach":
+        bot.say("User logs: https://outreach.wikimedia.org/wiki/Special:Log/" + target)
+    elif project is "sources":
+        bot.say("User logs: https://www.wikisource.org/wiki/Special:Log/" + target)
+    elif project is "species":
+        bot.say("User logs: https://species.wikimedia.org/wiki/Special:Log/" + target)
+    elif project is "wikidata":
+        bot.say("User logs: https://www.wikidata.org/wiki/Special:Log/" + target)
     else:
-        bot.say("Invalid project name.")
+        lang = project.replace("_", "-")
+        bot.say("User logs: https://" + lang + ".wikipedia.org/wiki/Special:Log/" + target)
 
 
 @plugin.command("proxy")
@@ -425,15 +413,16 @@ def xcon(bot, trigger):
 @plugin.command("xtools")
 def xtools(bot, trigger):
     # !xtools <project> <target>
-    wiki = re.search("wiki$", trigger.group(3))
-    wikibooks = re.search("wikibooks$", trigger.group(3))
-    wikimedia = re.search("wikimedia$", trigger.group(3))
-    wikinews = re.search("wikinews$", trigger.group(3))
-    wikiquote = re.search("wikiquote$", trigger.group(3))
-    wikisource = re.search("wikisource$", trigger.group(3))
-    wikiversity = re.search("wikiversity$", trigger.group(3))
-    wikivoyage = re.search("wikivoyage$", trigger.group(3))
-    wiktionary = re.search("wiktionary$", trigger.group(3))
+    project = re.sub(r'\.', "", trigger.group(3))
+
+    wikibooks = re.search("wikibooks$", project)
+    wikimedia = re.search("wikimedia$", project)
+    wikinews = re.search("wikinews$", project)
+    wikiquote = re.search("wikiquote$", project)
+    wikisource = re.search("wikisource$", project)
+    wikiversity = re.search("wikiversity$", project)
+    wikivoyage = re.search("wikivoyage$", project)
+    wiktionary = re.search("wiktionary$", project)
 
     count = len(trigger.group)
     i = 4
@@ -445,56 +434,52 @@ def xtools(bot, trigger):
 
     target = target.replace(" ", "_")
 
-    if wiki:
-        lang = re.split("wiki$", wiki.string)[0]
-        lang = lang.replace("_", "-")
-        if lang is "commons":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
-        elif lang is "incubator":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/incubator.wikimedia.org/" + target)
-        elif lang is "mediawiki":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/www.mediawiki.org/" + target)
-        elif lang is "outreach":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/outreach.wikimedia.org/" + target)
-        elif lang is "sources":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikisource.org/" + target)
-        elif lang is "species":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/species.wikimedia.org/" + target)
-        elif lang is "wikidata":
-            bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikidata.org/" + target)
-        else:
-            bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikipedia.org/" + target)
-    elif wikibooks:
-        lang = re.split("wikibooks$", wiki.string)[0]
+    if wikibooks:
+        lang = re.split("wikibooks$", wikibooks.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikibooks.org/" + target)
     elif wikimedia:
-        lang = re.split("wikimedia$", wiki.string)[0]
+        lang = re.split("wikimedia$", wikimedia.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikimedia.org/" + target)
     elif wikinews:
-        lang = re.split("wikinews$", wiki.string)[0]
+        lang = re.split("wikinews$", wikinews.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikinews.org/" + target)
     elif wikiquote:
-        lang = re.split("wikiquote$", wiki.string)[0]
+        lang = re.split("wikiquote$", wikiquote.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikiquote.org/" + target)
     elif wikisource:
-        lang = re.split("wikisource$", wiki.string)[0]
+        lang = re.split("wikisource$", wikisource.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikisource.org/" + target)
     elif wikiversity:
-        lang = re.split("wikiversity$", wiki.string)[0]
+        lang = re.split("wikiversity$", wikiversity.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikiversity.org/" + target)
     elif wikivoyage:
-        lang = re.split("wikivoyage$", wiki.string)[0]
+        lang = re.split("wikivoyage$", wikivoyage.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikivoyage.org/" + target)
     elif wiktionary:
-        lang = re.split("wiktionary$", wiki.string)[0]
+        lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wiktionary.org/" + target)
+    elif project is "commons":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
+    elif project is "incubator":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/incubator.wikimedia.org/" + target)
+    elif project is "mediawiki":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/www.mediawiki.org/" + target)
+    elif project is "outreach":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/outreach.wikimedia.org/" + target)
+    elif project is "sources":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikisource.org/" + target)
+    elif project is "species":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/species.wikimedia.org/" + target)
+    elif project is "wikidata":
+        bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikidata.org/" + target)
     else:
-        bot.say("Invalid project name.")
+        lang = project.replace("_", "-")
+        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikipedia.org/" + target)
