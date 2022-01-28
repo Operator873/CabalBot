@@ -1093,11 +1093,9 @@ def feedadmin(bot, trigger):
     db = sqlite3.connect(DB)
     c = db.cursor()
 
-    try:
-        action, target = trigger.group(2).split(" ", 1)
-    except ValueError:
-        action = trigger.group(2)
-        return
+    action = trigger.group(3)
+    if trigger.group(4) is not None:
+        target = trigger.group(4)
 
     if action.lower() == "add":
         check = c.execute(checkquery, (target, trigger.sender)).fetchall()
@@ -1419,7 +1417,7 @@ def gwatch(bot, trigger):
     elif watchAction == "ping" or watchAction == "Ping":
         if trigger.group(6) == "" or trigger.group(6) is None:
             bot.say(
-                "Command seems malformed. Syntax: !watch ping <on/off> namespaceID page"
+                "Command seems malformed. Syntax: !globalwatch ping <on/off> namespaceID page"
             )
         else:
             bot.say(
