@@ -1,7 +1,12 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/Operator873/SAM-for-desktop/releases)
 
 # Wikimedia CabalBot #
-A Sopel IRC Chat bot plugin which will allow you to watch pages locally or globally.
+A Sopel IRC bot plugin which provides a wide arrange of functions for Wikipedia/Wikimedia users. Current functions are:
+* Report edits on a single page on any project with or without ping
+* Globally watch a page in a specified namespace across all projects
+* Report RC feed directly to any channel for any project
+* Report Abuse Filter feed directly to any channel for any project
+* Various IRC commands to assist with integration
 
 ## Watch Commands ##
 
