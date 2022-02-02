@@ -6,7 +6,7 @@ def report(bot, change):
     gs = change["user"]
     gs_list = None
 
-    db = sqlite3.connect(bot.memory["cabaldb"])
+    db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
     try:
@@ -100,7 +100,7 @@ def report(bot, change):
 
 
 def check(project):
-    db = sqlite3.connect(bot.memory["cabaldb"])
+    db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
     check = c.execute(
