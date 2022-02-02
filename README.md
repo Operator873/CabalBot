@@ -1,6 +1,6 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/Operator873/SAM-for-desktop/releases)
 
-# Wikimedia Watcher #
+# Wikimedia CabalBot #
 A Sopel IRC Chat bot plugin which will allow you to watch pages locally or globally.
 
 ## Watch Commands ##
