@@ -1,0 +1,1 @@
+# This should contain functionality for the RC feed function callable from the main plugin

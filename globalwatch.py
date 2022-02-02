@@ -1,0 +1,1 @@
+# This should contain functionality for the !globalwatch function callable from the main plugin
