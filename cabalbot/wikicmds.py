@@ -19,7 +19,7 @@ def ca(bot, trigger):
 @plugin.command("contribs")
 def contribs(bot, trigger):
     # !contribs <project> <target>
-    project = re.sub(r'\.', "", trigger.group(3))
+    project = re.sub(r'..', "", trigger.group(3))
 
     wikibooks = re.search("wikibooks$", project)
     wikimedia = re.search("wikimedia$", project)
@@ -186,7 +186,7 @@ def xcon(bot, trigger):
 @plugin.command("xtools")
 def xtools(bot, trigger):
     # !xtools <project> <target>
-    project = re.sub(r'\.', "", trigger.group(3))
+    project = re.sub(r'..', "", trigger.group(3))
 
     wikibooks = re.search("wikibooks$", project)
     wikimedia = re.search("wikimedia$", project)

@@ -8,7 +8,7 @@ def check(change):
     c = db.cursor()
 
     exists = c.execute(
-        """SELECT name FROM sqlite_master WHERE type='table' AND name=?;""", (proj,)
+        """SELECT name FROM sqlite_master WHERE type='table' AND name=?;""", (change['wiki'],)
     ).fetchone()
 
     db.close()

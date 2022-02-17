@@ -1,7 +1,10 @@
+import sys
+sys.path.insert(0, '/path/to/sopel/plugins/cabalbot')
+
+import affeed
+import rcfeed
 import gstools
 import cabalutil
-import rcfeed
-import affeed
 import globalwatch
 import pagewatch
 import json
