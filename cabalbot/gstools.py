@@ -113,3 +113,43 @@ def check(project):
         return True
     else:
         return False
+
+def addGS(bot, trigger):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+    c.execute(
+        """INSERT INTO globalsysops VALUES(?, ?);""",
+        (trigger.group(3), trigger.group(4)),
+    )
+    db.commit()
+    nickCheck = c.execute(
+        """SELECT nick FROM globalsysops where account=?;""", (trigger.group(4),)
+    ).fetchall()
+    nicks = ""
+    for nick in nickCheck:
+        if nicks == "":
+            nicks = nick[0]
+        else:
+            nicks = nicks + " " + nick[0]
+    db.close()
+    bot.say(
+        "Wikipedia account "
+        + trigger.group(4)
+        + " is now known by IRC nick(s): "
+        + nicks
+    )
+
+
+def delGS(bot, trigger):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+    c.execute("""DELETE FROM globalsysops WHERE account=?;""", (trigger.group(3),))
+    db.commit()
+    checkWork = None
+    try:
+        checkWork = c.execute(
+            """SELECT nick FROM globalsysops WHERE account=?;""", (trigger.group(3),)
+        ).fetchall()
+        bot.say("All nicks for " + trigger.group(3) + " have been purged.")
+    except:
+        bot.say("Ugh... Something blew up. Help me " + bot.settings.core.owner)

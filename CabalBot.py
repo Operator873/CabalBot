@@ -66,185 +66,19 @@ def dispatch(bot, change):
 @plugin.require_admin(message=BOTADMINMSG)
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("feedadmin")
-def feedadmin(bot, trigger):
-    # !feedadmin {add/del/list} <target>
-    checkquery = """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;"""
-    insertnew = """INSERT INTO feed_admins VALUES(?, ?);"""
-    deladmin = """DELETE FROM feed_admins WHERE nick=? AND channel=?;"""
-    badcommand = "Invalid command. !feedadmin {add/del/list} <targetAccount>"
-    admins = ""
-
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    action = trigger.group(3)
-    if trigger.group(4) is not None:
-        target = trigger.group(4)
-
-    if action.lower() == "add":
-        check = c.execute(checkquery, (target, trigger.sender)).fetchall()
-
-        if len(check) == 0:
-            c.execute(insertnew, (target, trigger.sender))
-            db.commit()
-
-            checkagain = c.execute(checkquery, (target, trigger.sender)).fetchall()
-
-            if len(checkagain) > 0:
-                bot.say(target + " added as a feed admin in " + trigger.sender)
-            else:
-                bot.say(
-                    "Error inserting new feed admin. Notifying "
-                    + bot.settings.core.owner
-                )
-        else:
-            db.close()
-            bot.say(target + " is already a feed_admin in this channel.")
-            return
-
-    elif action.lower() == "del":
-        check = c.execute(checkquery, (target, trigger.sender)).fetchall()
-
-        if len(check) >= 1:
-            c.execute(deladmin, (target, trigger.sender))
-            db.commit()
-
-            checkagain = c.execute(checkquery, (target, trigger.sender)).fetchall()
-
-            if len(checkagain) == 0:
-                bot.say(target + " removed from feed admins in " + trigger.sender)
-            else:
-                bot.say(
-                    "Error removing feed admin. Notifying " + bot.settings.core.owner
-                )
-        else:
-            bot.say(target + " doesn't appear to be a feed admin in this channel.")
-
-    elif action.lower() == "list":
-        check = c.execute(
-            """SELECT nick FROM feed_admins WHERE channel=?;""", (trigger.sender,)
-        ).fetchall()
-
-        for nick in check:
-            admins = admins + nick[0] + " "
-
-        bot.say("The following accounts have feed admin in this channel: " + admins)
-
-    else:
-        bot.say(badcommand)
-
-    db.close()
+def feedcmd(bot, trigger):
+    cabalutil.feedadmin(bot, trigger)
 
 
 @plugin.command("speak")
-def watcherSpeak(bot, trigger):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    doesExist = c.execute(
-        """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
-    ).fetchall()
-
-    if len(doesExist) > 0:
-        try:
-            if (
-                len(
-                    c.execute(
-                        """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""",
-                        (trigger.account, trigger.sender),
-                    ).fetchall()
-                )
-                > 0
-            ):
-                c.execute(
-                    """DELETE FROM hushchannels WHERE channel=?;""", (trigger.sender,)
-                )
-                db.commit()
-                bot.say("Alright! Back to business.")
-            else:
-                bot.say("You're not authorized to execute this command.")
-        except:
-            bot.say("Ugh... something blew up. Help me " + bot.settings.core.owner)
-        finally:
-            db.close()
-    else:
-        db.close()
-        bot.say(trigger.nick + ": I'm already in 'speak' mode.")
+def set_speak(bot, trigger):
+    cabalutil.watcherSpeak(bot, trigger)
 
 
 @plugin.command("hush")
 @plugin.command("mute")
-def watcherHush(bot, trigger):
-    import time
-
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-    now = time.time()
-    timestamp = time.ctime(now)
-
-    doesExist = c.execute(
-        """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
-    ).fetchall()
-
-    if len(doesExist) > 0:
-        chan, nick, time = doesExist[0]
-        bot.say(
-            trigger.nick + ": I'm already hushed by " + nick + " since " + time + "."
-        )
-        db.close()
-    else:
-        if (
-            trigger.sender == "#wikimedia-gs-internal"
-            or trigger.sender == "#wikimedia-gs"
-        ):
-            isGS = c.execute(
-                """SELECT account from globalsysops where nick=?;""", (trigger.nick,)
-            ).fetchall()
-            if len(isGS) > 0:
-                try:
-                    c.execute(
-                        """INSERT INTO hushchannels VALUES("%s", "%s", "%s");"""
-                        % (trigger.sender, trigger.account, timestamp)
-                    )
-                    db.commit()
-                    check = c.execute(
-                        """SELECT * FROM hushchannels WHERE channel=?;""",
-                        (trigger.sender,),
-                    ).fetchall()[0]
-                    chan, nick, time = check
-                    bot.say(nick + " hushed! " + time)
-                    db.close()
-                except:
-                    bot.say(
-                        "Ugh... something blew up. Help me " + bot.settings.core.owner
-                    )
-
-        elif (
-            len(
-                c.execute(
-                    """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""",
-                    (trigger.account, trigger.sender),
-                ).fetchall()
-            )
-            > 0
-        ):
-            try:
-                c.execute(
-                    """INSERT INTO hushchannels VALUES(?, ?, ?);""",
-                    (trigger.sender, trigger.account, timestamp),
-                )
-                db.commit()
-                check = c.execute(
-                    """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
-                ).fetchall()[0]
-                chan, nick, time = check
-                bot.say(nick + " hushed! " + time)
-                db.close()
-            except:
-                bot.say("Ugh... something blew up. Help me " + bot.settings.core.owner)
-
-        else:
-            bot.say("You're not authorized to execute this command.")
+def do_hush(bot, trigger):
+    cabalutil.watcherHush(bot, trigger)
 
 
 @plugin.require_admin(message=BOTADMINMSG)
@@ -312,47 +146,14 @@ def watchStop(bot, trigger):
 
 @plugin.require_admin(message=BOTADMINMSG)
 @plugin.command("addmember")
-def addGS(bot, trigger):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-    c.execute(
-        """INSERT INTO globalsysops VALUES(?, ?);""",
-        (trigger.group(3), trigger.group(4)),
-    )
-    db.commit()
-    nickCheck = c.execute(
-        """SELECT nick FROM globalsysops where account=?;""", (trigger.group(4),)
-    ).fetchall()
-    nicks = ""
-    for nick in nickCheck:
-        if nicks == "":
-            nicks = nick[0]
-        else:
-            nicks = nicks + " " + nick[0]
-    db.close()
-    bot.say(
-        "Wikipedia account "
-        + trigger.group(4)
-        + " is now known by IRC nick(s): "
-        + nicks
-    )
+def do_addmember(bot, trigger):
+    gstools.addGS(bot, trigger)
 
 
 @plugin.require_admin(message=BOTADMINMSG)
 @plugin.command("removemember")
-def delGS(bot, trigger):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-    c.execute("""DELETE FROM globalsysops WHERE account=?;""", (trigger.group(3),))
-    db.commit()
-    checkWork = None
-    try:
-        checkWork = c.execute(
-            """SELECT nick FROM globalsysops WHERE account=?;""", (trigger.group(3),)
-        ).fetchall()
-        bot.say("All nicks for " + trigger.group(3) + " have been purged.")
-    except:
-        bot.say("Ugh... Something blew up. Help me " + bot.settings.core.owner)
+def do_delmember(bot, trigger):
+    gstools.delGS(bot, trigger)
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
@@ -413,52 +214,44 @@ def gwatch(bot, trigger):
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("namespace")
-def namespaces(bot, trigger):
-    listSpaces = {
-        "0": "Article",
-        "1": "Article talk",
-        "2": "User",
-        "3": "User talk",
-        "4": "Wikipedia",
-        "5": "Wikipedia talk",
-        "6": "File",
-        "7": "File talk",
-        "8": "MediaWiki",
-        "9": "MediaWiki talk",
-        "10": "Template",
-        "11": "Template talk",
-        "12": "Help",
-        "13": "Help talk",
-        "14": "Category",
-        "15": "Category talk",
-        "101": "Portal",
-        "102": "Portal talk",
-        "118": "Draft",
-        "119": "Draft talk",
-        "710": "TimedText",
-        "711": "TimedText talk",
-        "828": "Module",
-        "829": "Module talk",
-        "2300": "Gadget",
-        "2301": "Gadget talk",
-    }
-    search = trigger.group(2)
-    response = ""
+def get_namespace(bot, trigger):
+    bot.say(cabalutil.namespace(trigger))
 
-    if search == "" or search is None:
-        bot.say("Randomly showing an example. Try '!namespace User' or '!namespace 10'")
-        num, space = random.choice(list(listSpaces.items()))
-        bot.say(num + " is " + space)
-    else:
-        for item in listSpaces:
-            if listSpaces[item].lower() == search.lower():
-                response = item
-            elif item == search:
-                response = listSpaces[item]
 
-        if response == "":
-            bot.say(
-                "I can't find that name space. Global watch should still work, I just can't provide an example."
-            )
-        else:
-            bot.say(response)
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("startabusefeed")
+def do_startaffeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !startabusefeed <project>")
+        return
+
+    bot.say(affeed.start(trigger))
+
+
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("stopabusefeed")
+def do_stopaffeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !stopabusefeed <project>")
+        return
+
+    bot.say(affeed.stop(trigger))
+
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("startrcfeed")
+def do_startrcfeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !startabusefeed <project>")
+        return
+
+    bot.say(rcfeed.start(trigger))
+
+
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("stoprcfeed")
+def do_stoprcfeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !stopabusefeed <project>")
+        return
+
+    bot.say(rcfeed.stop(trigger))

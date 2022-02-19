@@ -261,3 +261,82 @@ def report(bot, change):
                     return
                 else:
                     bot.say(report, chan[0])
+
+
+def checkchannel(project, channel):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+
+    check = c.execute(
+        """SELECT channel FROM rc_feed WHERE project=?;""", (project, channel)
+    ).fetchall()
+
+    db.close()
+
+    if len(check) > 0:
+        return True
+    else:
+        return False
+
+
+def add_channel(project, channel):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+
+    try:
+        c.execute("""INSERT INTO rc_feed VALUES(?, ?);""", (project, channel))
+        db.commit()
+        result = True
+    except Exception as e:
+        result = False
+    finally:
+        db.close()
+        return result
+
+
+def del_channel(project, channel):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+
+    try:
+        c.execute("""DELETE FROM rc_feed WHERE project=? and channel=?;""", (project, channel))
+        db.commit()
+        result = True
+    except Exception as e:
+        result = False
+    finally:
+        db.close()
+        return result
+
+def start(trigger):
+    if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
+        response = "You are not authorized to start the Recent Changes feed in this channel."
+        return response
+
+    if checkchannel(trigger.group(3), trigger.sender):
+        response = "I'm already reporting Recent Changes for " + trigger.group(3) + " in this channel."
+        return response
+
+    if add_channel(trigger.group(3), trigger.sender):
+        response = "I will report Recent Changes on " + trigger.group(3) + " in this channel."
+    else:
+        response = "An unknown error occurred during addition to database."
+
+    return response
+
+
+def stop(trigger):
+    if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
+        response = "You are not authorized to stop the Recent Changes feed in this channel."
+        return response
+
+    if not checkchannel(trigger.group(3), trigger.sender):
+        response = "I'm not reporting Recent Changes in this channel."
+        return response
+
+    if del_channel(trigger.group(3), trigger.sender):
+        response = "Recent Changes for " + trigger.group(3) + " have been stopped."
+    else:
+        response = "An unknown error occurred during removal from the database."
+
+    return response
