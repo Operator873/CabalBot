@@ -29,19 +29,19 @@ def contribs(bot, trigger):
         return
 
     if project in tricky_ones:
-        if project is "commons":
+        if project == "commons":
             bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif project is "incubator":
+        elif project == "incubator":
             bot.say("User contribs: https://incubator.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif project is "mediawiki":
+        elif project == "mediawiki":
             bot.say("User contribs: https://www.mediawiki.org/wiki/Special:Contribs/" + target)
-        elif project is "outreach":
+        elif project == "outreach":
             bot.say("User contribs: https://outreach.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif project is "sources":
+        elif project == "sources":
             bot.say("User contribs: https://www.wikisource.org/wiki/Special:Contribs/" + target)
-        elif project is "species":
+        elif project == "species":
             bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
-        elif project is "wikidata":
+        elif project == "wikidata":
             bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
     else:
         try:
@@ -210,19 +210,19 @@ def xtools(bot, trigger):
         lang = re.split("wiktionary$", wiktionary.string)[0]
         lang = lang.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wiktionary.org/" + target)
-    elif project is "commons":
+    elif project == "commons":
         bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
-    elif project is "incubator":
+    elif project == "incubator":
         bot.say("XTools: https://xtools.wmflabs.org/ec/incubator.wikimedia.org/" + target)
-    elif project is "mediawiki":
+    elif project == "mediawiki":
         bot.say("XTools: https://xtools.wmflabs.org/ec/www.mediawiki.org/" + target)
-    elif project is "outreach":
+    elif project == "outreach":
         bot.say("XTools: https://xtools.wmflabs.org/ec/outreach.wikimedia.org/" + target)
-    elif project is "sources":
+    elif project == "sources":
         bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikisource.org/" + target)
-    elif project is "species":
+    elif project == "species":
         bot.say("XTools: https://xtools.wmflabs.org/ec/species.wikimedia.org/" + target)
-    elif project is "wikidata":
+    elif project == "wikidata":
         bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikidata.org/" + target)
     else:
         lang = project.replace("_", "-")
