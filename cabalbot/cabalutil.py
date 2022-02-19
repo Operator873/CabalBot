@@ -263,3 +263,16 @@ def namespaces(trigger):
             response = "I can't find that name space. Global watch should still work, I just can't provide an example."
 
     return response
+
+
+def ignored_nick(nick):
+    db = sqlite3.connect(getdb())
+    c = db.cursor()
+
+    is_ignored = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (nick,)).fetchall()
+    db.close()
+
+    if len(is_ignored) > 0:
+        return True
+    else:
+        return False
