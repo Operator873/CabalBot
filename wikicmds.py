@@ -227,3 +227,9 @@ def xtools(bot, trigger):
     else:
         lang = project.replace("_", "-")
         bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikipedia.org/" + target)
+
+
+@plugin.find(r'\[\[(.*?)\]\]')
+def autolink(bot, trigger):
+    getlink = trigger.groups()[0].replace(" ", "_")
+    bot.say("https://enwp.org/" + getlink)
