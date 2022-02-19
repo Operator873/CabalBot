@@ -2,12 +2,12 @@ import cabalutil
 import sqlite3
 
 
-def check(proj):
+def check(change):
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
     AF_exists = c.execute(
-        """SELECT * FROM af_feed WHERE project=?;""", (proj,)
+        """SELECT * FROM af_feed WHERE project=?;""", (change["wiki"],)
     ).fetchall()
 
     db.close()
@@ -63,7 +63,7 @@ def checkchannel(project, channel):
     c = db.cursor()
 
     check = c.execute(
-        """SELECT channel FROM af_feed WHERE project=?;""", (project, channel)
+        """SELECT channel FROM af_feed WHERE project=? and channel=?;""", (project, channel)
     ).fetchall()
 
     db.close()

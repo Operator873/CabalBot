@@ -147,7 +147,7 @@ def watcherSpeak(bot, trigger):
 def watcherHush(bot, trigger):
     import time
 
-    db = sqlite3.connect(cabalutil.getdb())
+    db = sqlite3.connect(getdb())
     c = db.cursor()
     now = time.time()
     timestamp = time.ctime(now)

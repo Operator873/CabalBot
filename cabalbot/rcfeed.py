@@ -268,7 +268,7 @@ def checkchannel(project, channel):
     c = db.cursor()
 
     check = c.execute(
-        """SELECT channel FROM rc_feed WHERE project=?;""", (project, channel)
+        """SELECT channel FROM rc_feed WHERE project=? and channel=?;""", (project, channel)
     ).fetchall()
 
     db.close()
