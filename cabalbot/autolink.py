@@ -75,7 +75,7 @@ def unignorenick(account):
 
     c.execute("""DELETE FROM ignore_nicks WHERE target=?;""", (account,))
 
-    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchall()
+    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchone()
     db.close()
 
     if verify is None:
