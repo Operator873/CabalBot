@@ -9,8 +9,6 @@ import globalwatch
 import pagewatch
 import json
 import threading
-import sqlite3
-import random
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -59,8 +57,9 @@ def dispatch(bot, change):
     if change["type"] == "log":
         if gstools.check(change["wiki"]):
             gstools.report(bot, change)
-        if affeed.check(change):
-            affeed.report(bot, change)
+        if change["log_type"] == "abusefilter":
+            if affeed.check(change):
+                affeed.report(bot, change)
 
 
 @plugin.require_admin(message=BOTADMINMSG)
