@@ -16,79 +16,50 @@ def ca(bot, trigger):
     bot.say("Meta CentralAuth https://meta.wikimedia.org/wiki/Special:CentralAuth/" + target)
 
 
+
+
 @plugin.command("contribs")
 def contribs(bot, trigger):
     # !contribs <project> <target>
-    project = re.sub(r'', "", trigger.group(3))
+    tricky_ones = ['commons', 'incubator', 'mediawiki', 'outreach', 'sources', 'species', 'wikidata']
+    try:
+        project, target = trigger.group(2).split(" ", 1)
+    except ValueError:
+        bot.say("Something is missing... Syntax is !contribs <project> <target>")
+        return
 
-    wikibooks = re.search("wikibooks$", project)
-    wikimedia = re.search("wikimedia$", project)
-    wikinews = re.search("wikinews$", project)
-    wikiquote = re.search("wikiquote$", project)
-    wikisource = re.search("wikisource$", project)
-    wikiversity = re.search("wikiversity$", project)
-    wikivoyage = re.search("wikivoyage$", project)
-    wiktionary = re.search("wiktionary$", project)
-
-    count = len(trigger.group)
-    i = 4
-    target = ""
-
-    while i < count:
-        target += trigger.group(i)
-        i = i + 1
-
-    target = target.replace(" ", "_")
-
-    if wikibooks:
-        lang = re.split("wikibooks$", wikibooks.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikibooks.org/wiki/Special:Contribs/" + target)
-    elif wikimedia:
-        lang = re.split("wikimedia$", wikimedia.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikimedia.org/wiki/Special:Contribs/" + target)
-    elif wikinews:
-        lang = re.split("wikinews$", wikinews.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikinews.org/wiki/Special:Contribs/" + target)
-    elif wikiquote:
-        lang = re.split("wikiquote$", wikiquote.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikiquote.org/wiki/Special:Contribs/" + target)
-    elif wikisource:
-        lang = re.split("wikisource$", wikisource.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikisource.org/wiki/Special:Contribs/" + target)
-    elif wikiversity:
-        lang = re.split("wikiversity$", wikiversity.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikiversity.org/wiki/Special:Contribs/" + target)
-    elif wikivoyage:
-        lang = re.split("wikivoyage$", wikivoyage.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikivoyage.org/wiki/Special:Contribs/" + target)
-    elif wiktionary:
-        lang = re.split("wiktionary$", wiktionary.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wiktionary.org/wiki/Special:Contribs/" + target)
-    elif project is "commons":
-        bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
-    elif project is "incubator":
-        bot.say("User contribs: https://incubator.wikimedia.org/wiki/Special:Contribs/" + target)
-    elif project is "mediawiki":
-        bot.say("User contribs: https://www.mediawiki.org/wiki/Special:Contribs/" + target)
-    elif project is "outreach":
-        bot.say("User contribs: https://outreach.wikimedia.org/wiki/Special:Contribs/" + target)
-    elif project is "sources":
-        bot.say("User contribs: https://www.wikisource.org/wiki/Special:Contribs/" + target)
-    elif project is "species":
-        bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
-    elif project is "wikidata":
-        bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
+    if project in tricky_ones:
+        if project is "commons":
+            bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
+        elif project is "incubator":
+            bot.say("User contribs: https://incubator.wikimedia.org/wiki/Special:Contribs/" + target)
+        elif project is "mediawiki":
+            bot.say("User contribs: https://www.mediawiki.org/wiki/Special:Contribs/" + target)
+        elif project is "outreach":
+            bot.say("User contribs: https://outreach.wikimedia.org/wiki/Special:Contribs/" + target)
+        elif project is "sources":
+            bot.say("User contribs: https://www.wikisource.org/wiki/Special:Contribs/" + target)
+        elif project is "species":
+            bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
+        elif project is "wikidata":
+            bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
     else:
-        lang = project.replace("_", "-")
-        bot.say("User contribs: https://" + lang + ".wikipedia.org/wiki/Special:Contribs/" + target)
+        try:
+            lang, proj = re.split("w", project)
+            lang = lang.replace("_", "-")
+        except ValueError:
+            lang = None
+
+        target = target.replace(" ", "_")
+
+        if lang is not None:
+            if proj == "iki":
+                bot.say("User contribs: https://" + lang + ".wikipedia.org/wiki/Special:Contribs/" + target)
+            else:
+                bot.say("User contribs: https://" + lang + ".w" + proj + ".org/wiki/Special:Contribs/" + target)
+
+        else:
+            bot.say("Hmm... I've tried and just can't figure out which project " + project + " is. I'm sorry.")
 
 
 @plugin.command("geo")
