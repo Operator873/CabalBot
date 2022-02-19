@@ -267,9 +267,11 @@ def do_stoprcfeed(bot, trigger):
     bot.say(rcfeed.stop(trigger))
 
 
-@plugin.find(r'\[\[(.*?)\]\]')
+@plugin.find(r"\[\[(.*?)\]\]")
 def autolinker(bot, trigger):
-    if not autolink.checklang(trigger.sender) or cabalutil.ignored_nick(trigger.account):
+    if not autolink.checklang(trigger.sender) or cabalutil.ignored_nick(
+        trigger.account
+    ):
         return
 
     else:

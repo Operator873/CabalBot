@@ -1,11 +1,14 @@
 import sqlite3
 import cabalutil
 
+
 def checklang(channel):
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchall()
+    check = c.execute(
+        """SELECT * FROM channel_lang WHERE channel=?;""", (channel,)
+    ).fetchall()
     db.close()
 
     if len(check) > 0:
@@ -21,7 +24,9 @@ def addlang(channel, project, url=""):
     c.execute("""INSERT INTO channel_lang VALUES(?, ?, ?);""", (channel, project, url))
     db.commit()
 
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
+    check = c.execute(
+        """SELECT * FROM channel_lang WHERE channel=?;""", (channel,)
+    ).fetchone()
     db.close()
 
     if len(check) > 0:
@@ -34,7 +39,9 @@ def rmvlang(channel):
 
     c.execute("""DELETE FROM channel_lang WHERE channel=?;""", (channel,))
     db.commit()
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
+    check = c.execute(
+        """SELECT * FROM channel_lang WHERE channel=?;""", (channel,)
+    ).fetchone()
     db.close()
 
     if check is None:
@@ -45,7 +52,9 @@ def getlang(channel):
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
-    result = c.execute("""SELECT url FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
+    result = c.execute(
+        """SELECT url FROM channel_lang WHERE channel=?;""", (channel,)
+    ).fetchone()
     db.close()
 
     if result is None:
@@ -60,7 +69,9 @@ def ignorenick(account, admin):
 
     c.execute("""INSERT INTO ignore_nicks VALUES(?,?);""", (account, admin))
 
-    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchall()
+    verify = c.execute(
+        """SELECT * FROM ignore_nicks WHERE target=?;""", (account,)
+    ).fetchall()
     db.close()
 
     if len(verify) > 0:
@@ -75,7 +86,9 @@ def unignorenick(account):
 
     c.execute("""DELETE FROM ignore_nicks WHERE target=?;""", (account,))
 
-    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchone()
+    verify = c.execute(
+        """SELECT * FROM ignore_nicks WHERE target=?;""", (account,)
+    ).fetchone()
     db.close()
 
     if verify is None:

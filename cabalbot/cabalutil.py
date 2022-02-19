@@ -269,7 +269,9 @@ def ignored_nick(nick):
     db = sqlite3.connect(getdb())
     c = db.cursor()
 
-    is_ignored = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (nick,)).fetchall()
+    is_ignored = c.execute(
+        """SELECT * FROM ignore_nicks WHERE target=?;""", (nick,)
+    ).fetchall()
     db.close()
 
     if len(is_ignored) > 0:
