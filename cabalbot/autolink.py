@@ -1,11 +1,11 @@
 import sqlite3
 import cabalutil
 
-def checklang(trigger):
+def checklang(channel):
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
 
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (trigger.sender,)).fetchall()
+    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchall()
     db.close()
 
     if len(check) > 0:
@@ -37,7 +37,7 @@ def rmvlang(channel):
     check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
     db.close()
 
-    if len(check) == 0:
+    if check is None:
         return True
 
 def getlang(channel):
