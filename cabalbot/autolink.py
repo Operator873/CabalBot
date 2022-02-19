@@ -21,7 +21,7 @@ def addlang(channel, project, url=""):
     c.execute("""INSERT INTO channel_lang VALUES(?, ?, ?);""", (channel, project, url))
     db.commit()
 
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?:""", (channel,)).fetchone()
+    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
     db.close()
 
     if len(check) > 0:
@@ -34,7 +34,7 @@ def rmvlang(channel):
 
     c.execute("""DELETE FROM channel_lang WHERE channel=?;""", (channel,))
     db.commit()
-    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?:""", (channel,)).fetchone()
+    check = c.execute("""SELECT * FROM channel_lang WHERE channel=?;""", (channel,)).fetchone()
     db.close()
 
     if len(check) == 0:
