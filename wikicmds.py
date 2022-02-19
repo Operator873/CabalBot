@@ -21,7 +21,7 @@ def ca(bot, trigger):
 @plugin.command("contribs")
 def contribs(bot, trigger):
     # !contribs <project> <target>
-    tricky_ones = ['commons', 'incubator', 'mediawiki', 'outreach', 'sources', 'species', 'wikidata']
+    tricky_ones = ['commons', 'incubator', 'mediawiki', 'outreach', 'sources', 'species', 'wikidata', 'meta']
     try:
         project, target = trigger.group(2).split(" ", 1)
     except ValueError:
@@ -43,6 +43,8 @@ def contribs(bot, trigger):
             bot.say("User contribs: https://species.wikimedia.org/wiki/Special:Contribs/" + target)
         elif project == "wikidata":
             bot.say("User contribs: https://www.wikidata.org/wiki/Special:Contribs/" + target)
+        elif project == "meta":
+            bot.say("User contribs: https://meta.wikimedia.org/wiki/Special:Contribs/" + target)
     else:
         try:
             lang, proj = re.split("w", project)
