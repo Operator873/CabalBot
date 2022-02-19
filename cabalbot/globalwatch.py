@@ -148,7 +148,7 @@ def report(bot, change):
         db.close()
 
 
-def globalWatcherAdd(msg, nick, chan):
+def addpage(msg, nick, chan):
     # !globalwatch add namespaceid title
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
@@ -206,7 +206,7 @@ def globalWatcherAdd(msg, nick, chan):
     return response
 
 
-def globalWatcherDel(msg, nick, chan):
+def delpage(msg, nick, chan):
     # !globalwatch del namespaceid title
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
@@ -260,7 +260,7 @@ def globalWatcherDel(msg, nick, chan):
     return response
 
 
-def globalWatcherPing(msg, nick, chan):
+def ping(msg, nick, chan):
     # !globalwatch ping on namespaceid title
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()

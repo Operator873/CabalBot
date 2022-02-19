@@ -163,17 +163,17 @@ def watch(bot, trigger):
         if trigger.group(5) == "":
             bot.say("Command seems malformed. Syntax: !watch add proj page")
         else:
-            bot.say(watcherAdd(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(pagewatch.watcherAdd(trigger.group(2), trigger.account, trigger.sender))
     elif watchAction == "del" or watchAction == "Del" or watchAction == "-":
         if trigger.group(5) == "":
             bot.say("Command seems malformed. Syntax: !watch del proj page")
         else:
-            bot.say(watcherDel(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(pagewatch.watcherDel(trigger.group(2), trigger.account, trigger.sender))
     elif watchAction == "ping" or watchAction == "Ping":
         if trigger.group(6) == "":
             bot.say("Command seems malformed. Syntax: !watch ping <on/off> proj page")
         else:
-            bot.say(watcherPing(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(pagewatch.watcherPing(trigger.group(2), trigger.account, trigger.sender))
     else:
         bot.say("I don't recognzie that command. Options are: Add & Del")
 
@@ -190,14 +190,14 @@ def gwatch(bot, trigger):
                 "Command seems malformed. Syntax: !globalwatch add namespaceID page"
             )
         else:
-            bot.say(globalWatcherAdd(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(globalwatch.addpage(trigger.group(2), trigger.account, trigger.sender))
     elif watchAction == "del" or watchAction == "Del" or watchAction == "-":
         if trigger.group(5) == "" or trigger.group(5) is None:
             bot.say(
                 "Command seems malformed. Syntax: !globalwatch del namespaceID page"
             )
         else:
-            bot.say(globalWatcherDel(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(globalwatch.delpage(trigger.group(2), trigger.account, trigger.sender))
     elif watchAction == "ping" or watchAction == "Ping":
         if trigger.group(6) == "" or trigger.group(6) is None:
             bot.say(
@@ -205,7 +205,7 @@ def gwatch(bot, trigger):
             )
         else:
             bot.say(
-                globalWatcherPing(trigger.group(2), trigger.account, trigger.sender)
+                globalwatch.ping(trigger.group(2), trigger.account, trigger.sender)
             )
     else:
         bot.say("I don't recognize that command. Options are: add, del, & ping")
@@ -214,11 +214,11 @@ def gwatch(bot, trigger):
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("namespace")
 def get_namespace(bot, trigger):
-    bot.say(cabalutil.namespace(trigger))
+    bot.say(cabalutil.namespaces(trigger))
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("startabusefeed")
+@plugin.command("startabusefeed", "startaffeed")
 def do_startaffeed(bot, trigger):
     if not trigger.group(3):
         bot.say("Missing project! Syntax: !startabusefeed <project>")
@@ -228,7 +228,7 @@ def do_startaffeed(bot, trigger):
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("stopabusefeed")
+@plugin.command("stopabusefeed", "stopaffeed")
 def do_stopaffeed(bot, trigger):
     if not trigger.group(3):
         bot.say("Missing project! Syntax: !stopabusefeed <project>")

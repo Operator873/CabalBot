@@ -44,9 +44,9 @@ def report(bot, change):
             + filterNumber
             + " was activated by "
             + editor
-            + " at "
+            + " on "
             + pageLink
-            + " "
+            + " || Log Entry: "
             + logLink
         )
 
