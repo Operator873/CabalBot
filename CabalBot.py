@@ -8,6 +8,7 @@ import gstools
 import cabalutil
 import globalwatch
 import pagewatch
+import autolink
 import json
 import threading
 from sopel import plugin
@@ -264,3 +265,40 @@ def do_stoprcfeed(bot, trigger):
         return
 
     bot.say(rcfeed.stop(trigger))
+
+
+@plugin.find(r'\[\[(.*?)\]\]')
+def autolinker(bot, trigger):
+    if not autolink.checklang(trigger.sender):
+        return
+
+    else:
+        url = autolink.getlang(trigger.sender)
+        link = trigger.groups()[0].replace(" ", "_")
+        if url is None:
+            bot.say("I found the channel in the database, but there was no URL saved.")
+        else:
+            bot.say(url + link)
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("setlang")
+def setlang(bot, trigger):
+    # !setlang enwiki https://enwp.org/
+    if not trigger.group(4):
+        bot.say("Missing URL! Syntax is !setlang <project> <baseURL>")
+        return
+
+    if autolink.addlang(trigger.sender, trigger.group(3), trigger.group(4)):
+        bot.say(trigger.sender + " will use " + trigger.group(4))
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("unsetlang")
+def unsetlang(bot, trigger):
+    # !unsetlang
+
+    if autolink.rmvlang(trigger.sender):
+        bot.say(trigger.sender + " was cleared.")
