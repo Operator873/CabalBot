@@ -52,7 +52,7 @@ def report(bot, change):
 
         if report is not None:
             for chan in channel:
-                if cabalutil.check_hush(chan) is True:
+                if cabalutil.check_hush(chan[0]) is True:
                     return
                 else:
                     bot.say(report, chan)
