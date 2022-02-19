@@ -298,7 +298,23 @@ def setlang(bot, trigger):
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("unsetlang")
 def unsetlang(bot, trigger):
-    # !unsetlang
-
     if autolink.rmvlang(trigger.sender):
         bot.say(trigger.sender + " was cleared.")
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("ignorenick")
+def setignorenick(bot, trigger):
+    # !ignorenick <ircAccountName>
+    if autolink.ignorenick(trigger.group(3), trigger.account):
+        bot.say("I'll ignore links from " + trigger.group(3) + " from now on.")
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("unignorenick")
+def setunignorenick(bot, trigger):
+    # !unignorenick <ircAccountName>
+    if autolink.unignorenick(trigger.group(3)):
+        bot.say("I'll stop ignoring links from " + trigger.group(3) + ".")

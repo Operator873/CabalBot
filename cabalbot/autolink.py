@@ -40,6 +40,7 @@ def rmvlang(channel):
     if check is None:
         return True
 
+
 def getlang(channel):
     db = sqlite3.connect(cabalutil.getdb())
     c = db.cursor()
@@ -51,3 +52,33 @@ def getlang(channel):
         return result
     else:
         return result[0]
+
+
+def ignorenick(account, admin):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+
+    c.execute("""INSERT INTO ignore_nicks VALUES(?,?);""", (account, admin))
+
+    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchall()
+    db.close()
+
+    if len(verify) > 0:
+        return True
+    else:
+        return False
+
+
+def unignorenick(account):
+    db = sqlite3.connect(cabalutil.getdb())
+    c = db.cursor()
+
+    c.execute("""DELETE FROM ignore_nicks WHERE target=?;""", (account,))
+
+    verify = c.execute("""SELECT * FROM ignore_nicks WHERE target=?;""", (account,)).fetchall()
+    db.close()
+
+    if verify is None:
+        return True
+    else:
+        return False
