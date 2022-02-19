@@ -55,7 +55,7 @@ def report(bot, change):
                 if cabalutil.check_hush(chan[0]) is True:
                     return
                 else:
-                    bot.say(report, chan)
+                    bot.say(report, chan[0])
 
 
 def checkchannel(project, channel):
