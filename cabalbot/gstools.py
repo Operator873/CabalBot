@@ -1,6 +1,7 @@
 import sqlite3
 import cabalutil
 
+
 def report(bot, change):
 
     gs = change["user"]
@@ -113,6 +114,7 @@ def check(project):
         return True
     else:
         return False
+
 
 def addGS(bot, trigger):
     db = sqlite3.connect(cabalutil.getdb())

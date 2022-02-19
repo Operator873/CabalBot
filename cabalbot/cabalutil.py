@@ -1,6 +1,7 @@
 import sqlite3
 import random
 
+
 def getdb():
     return "wiki.db"
 
@@ -106,7 +107,6 @@ def check_feedadmin(target, channel):
         return True
     else:
         return False
-
 
 
 def watcherSpeak(bot, trigger):
@@ -260,8 +260,6 @@ def namespaces(trigger):
                 response = listSpaces[item]
 
         if response == "":
-            response = (
-                "I can't find that name space. Global watch should still work, I just can't provide an example."
-            )
+            response = "I can't find that name space. Global watch should still work, I just can't provide an example."
 
     return response

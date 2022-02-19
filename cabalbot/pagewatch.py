@@ -8,7 +8,8 @@ def check(change):
     c = db.cursor()
 
     exists = c.execute(
-        """SELECT name FROM sqlite_master WHERE type='table' AND name=?;""", (change['wiki'],)
+        """SELECT name FROM sqlite_master WHERE type='table' AND name=?;""",
+        (change["wiki"],),
     ).fetchone()
 
     db.close()
@@ -18,15 +19,16 @@ def check(change):
     else:
         return False
 
+
 def checkcss(change):
 
-    if (
-        re.search(r".*\.css$", change["title"]) or
-        re.search(r".*\.js$", change["title"])
+    if re.search(r".*\.css$", change["title"]) or re.search(
+        r".*\.js$", change["title"]
     ):
         return True
     else:
         return False
+
 
 def report(bot, change):
 
@@ -37,7 +39,7 @@ def report(bot, change):
     chDiff = chURL + "/w/index.php?diff=" + chRev
     chComment = change["comment"]
     editor = change["user"]
-    space = u"\u200B"
+    space = "\u200B"
     editor = editor[:2] + space + editor[2:]
     check = None
 
@@ -302,7 +304,7 @@ def cssjs(bot, change):
     chDiff = chURL + "/w/index.php?diff=" + chRev + "&safemode=1"
     chComment = change["comment"]
     editor = change["user"]
-    space = u"\u200B"
+    space = "\u200B"
     editor = editor[:2] + space + editor[2:]
 
     bot.say(

@@ -44,7 +44,7 @@ def report(bot, change):
             action = str(change["log_type"]).upper()
             subType = str(change["log_action"]).upper()
             pageLink = change["meta"]["uri"]
-            space = u"\u200B"
+            space = "\u200B"
             editor = change["user"][:2] + space + change["user"][2:]
             comment = str(change["comment"]).replace("\n", "")
 
@@ -229,7 +229,7 @@ def report(bot, change):
             chDiff = chURL + "/w/index.php?diff=" + chRev
             chComment = change["comment"]
             editor = change["user"]
-            space = u"\u200B"
+            space = "\u200B"
             editor = editor[:2] + space + editor[2:]
 
             if change["type"] == "edit":
@@ -268,7 +268,8 @@ def checkchannel(project, channel):
     c = db.cursor()
 
     check = c.execute(
-        """SELECT channel FROM rc_feed WHERE project=? and channel=?;""", (project, channel)
+        """SELECT channel FROM rc_feed WHERE project=? and channel=?;""",
+        (project, channel),
     ).fetchall()
 
     db.close()
@@ -299,7 +300,9 @@ def del_channel(project, channel):
     c = db.cursor()
 
     try:
-        c.execute("""DELETE FROM rc_feed WHERE project=? and channel=?;""", (project, channel))
+        c.execute(
+            """DELETE FROM rc_feed WHERE project=? and channel=?;""", (project, channel)
+        )
         db.commit()
         result = True
     except Exception as e:
@@ -308,17 +311,26 @@ def del_channel(project, channel):
         db.close()
         return result
 
+
 def start(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
-        response = "You are not authorized to start the Recent Changes feed in this channel."
+        response = (
+            "You are not authorized to start the Recent Changes feed in this channel."
+        )
         return response
 
     if checkchannel(trigger.group(3), trigger.sender):
-        response = "I'm already reporting Recent Changes for " + trigger.group(3) + " in this channel."
+        response = (
+            "I'm already reporting Recent Changes for "
+            + trigger.group(3)
+            + " in this channel."
+        )
         return response
 
     if add_channel(trigger.group(3), trigger.sender):
-        response = "I will report Recent Changes on " + trigger.group(3) + " in this channel."
+        response = (
+            "I will report Recent Changes on " + trigger.group(3) + " in this channel."
+        )
     else:
         response = "An unknown error occurred during addition to database."
 
@@ -327,7 +339,9 @@ def start(trigger):
 
 def stop(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
-        response = "You are not authorized to stop the Recent Changes feed in this channel."
+        response = (
+            "You are not authorized to stop the Recent Changes feed in this channel."
+        )
         return response
 
     if not checkchannel(trigger.group(3), trigger.sender):

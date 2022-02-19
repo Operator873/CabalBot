@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, '/path/to/sopel/plugins/cabalbot')
+
+sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot")
 
 import affeed
 import rcfeed
@@ -163,17 +164,23 @@ def watch(bot, trigger):
         if trigger.group(5) == "":
             bot.say("Command seems malformed. Syntax: !watch add proj page")
         else:
-            bot.say(pagewatch.watcherAdd(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(
+                pagewatch.watcherAdd(trigger.group(2), trigger.account, trigger.sender)
+            )
     elif watchAction == "del" or watchAction == "Del" or watchAction == "-":
         if trigger.group(5) == "":
             bot.say("Command seems malformed. Syntax: !watch del proj page")
         else:
-            bot.say(pagewatch.watcherDel(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(
+                pagewatch.watcherDel(trigger.group(2), trigger.account, trigger.sender)
+            )
     elif watchAction == "ping" or watchAction == "Ping":
         if trigger.group(6) == "":
             bot.say("Command seems malformed. Syntax: !watch ping <on/off> proj page")
         else:
-            bot.say(pagewatch.watcherPing(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(
+                pagewatch.watcherPing(trigger.group(2), trigger.account, trigger.sender)
+            )
     else:
         bot.say("I don't recognzie that command. Options are: Add & Del")
 
@@ -190,23 +197,25 @@ def gwatch(bot, trigger):
                 "Command seems malformed. Syntax: !globalwatch add namespaceID page"
             )
         else:
-            bot.say(globalwatch.addpage(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(
+                globalwatch.addpage(trigger.group(2), trigger.account, trigger.sender)
+            )
     elif watchAction == "del" or watchAction == "Del" or watchAction == "-":
         if trigger.group(5) == "" or trigger.group(5) is None:
             bot.say(
                 "Command seems malformed. Syntax: !globalwatch del namespaceID page"
             )
         else:
-            bot.say(globalwatch.delpage(trigger.group(2), trigger.account, trigger.sender))
+            bot.say(
+                globalwatch.delpage(trigger.group(2), trigger.account, trigger.sender)
+            )
     elif watchAction == "ping" or watchAction == "Ping":
         if trigger.group(6) == "" or trigger.group(6) is None:
             bot.say(
                 "Command seems malformed. Syntax: !globalwatch ping <on/off> namespaceID page"
             )
         else:
-            bot.say(
-                globalwatch.ping(trigger.group(2), trigger.account, trigger.sender)
-            )
+            bot.say(globalwatch.ping(trigger.group(2), trigger.account, trigger.sender))
     else:
         bot.say("I don't recognize that command. Options are: add, del, & ping")
 
@@ -235,6 +244,7 @@ def do_stopaffeed(bot, trigger):
         return
 
     bot.say(affeed.stop(trigger))
+
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("startrcfeed")

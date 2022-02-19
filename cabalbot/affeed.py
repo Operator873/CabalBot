@@ -17,6 +17,7 @@ def check(change):
     else:
         return False
 
+
 def report(bot, change):
     project = change["wiki"]
 
@@ -30,7 +31,7 @@ def report(bot, change):
     if len(channel) > 0:
 
         pageLink = change["meta"]["uri"]
-        space = u"\u200B"
+        space = "\u200B"
         editor = change["user"][:2] + space + change["user"][2:]
         logLink = (
             change["server_url"]
@@ -63,7 +64,8 @@ def checkchannel(project, channel):
     c = db.cursor()
 
     check = c.execute(
-        """SELECT channel FROM af_feed WHERE project=? and channel=?;""", (project, channel)
+        """SELECT channel FROM af_feed WHERE project=? and channel=?;""",
+        (project, channel),
     ).fetchall()
 
     db.close()
@@ -94,7 +96,9 @@ def del_channel(project, channel):
     c = db.cursor()
 
     try:
-        c.execute("""DELETE FROM af_feed WHERE project=? and channel=?;""", (project, channel))
+        c.execute(
+            """DELETE FROM af_feed WHERE project=? and channel=?;""", (project, channel)
+        )
         db.commit()
         result = True
     except Exception as e:
@@ -103,9 +107,12 @@ def del_channel(project, channel):
         db.close()
         return result
 
+
 def start(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
-        response = "You are not authorized to start the Abuse Filter feed in this channel."
+        response = (
+            "You are not authorized to start the Abuse Filter feed in this channel."
+        )
         return response
 
     if checkchannel(trigger.group(3), trigger.sender):
@@ -113,7 +120,11 @@ def start(trigger):
         return response
 
     if add_channel(trigger.group(3), trigger.sender):
-        response = "I will report Abuse Filter activations on " + trigger.group(3) + " in this channel."
+        response = (
+            "I will report Abuse Filter activations on "
+            + trigger.group(3)
+            + " in this channel."
+        )
     else:
         response = "An unknown error occurred during addition to database."
 
@@ -122,7 +133,9 @@ def start(trigger):
 
 def stop(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
-        response = "You are not authorized to start the Abuse Filter feed in this channel."
+        response = (
+            "You are not authorized to start the Abuse Filter feed in this channel."
+        )
         return response
 
     if not checkchannel(trigger.group(3), trigger.sender):
@@ -130,7 +143,9 @@ def stop(trigger):
         return response
 
     if del_channel(trigger.group(3), trigger.sender):
-        response = "Abuse Filter reports for " + trigger.group(3) + " have been stopped."
+        response = (
+            "Abuse Filter reports for " + trigger.group(3) + " have been stopped."
+        )
     else:
         response = "An unknown error occurred during removal from the database."
 

@@ -23,6 +23,7 @@ def check(change):
     else:
         return False
 
+
 def report(bot, change):
     """title / namespace / nick / channel / notify"""
 
@@ -34,7 +35,7 @@ def report(bot, change):
     chComment = change["comment"]
     chNamespace = str(change["namespace"])
     editor = change["user"]
-    space = u"\u200B"
+    space = "\u200B"
     editor = editor[:2] + space + editor[2:]
 
     try:
