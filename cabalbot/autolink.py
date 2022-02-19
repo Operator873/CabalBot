@@ -68,6 +68,7 @@ def ignorenick(account, admin):
     c = db.cursor()
 
     c.execute("""INSERT INTO ignore_nicks VALUES(?,?);""", (account, admin))
+    db.commit()
 
     verify = c.execute(
         """SELECT * FROM ignore_nicks WHERE target=?;""", (account,)
@@ -85,6 +86,7 @@ def unignorenick(account):
     c = db.cursor()
 
     c.execute("""DELETE FROM ignore_nicks WHERE target=?;""", (account,))
+    db.commit()
 
     verify = c.execute(
         """SELECT * FROM ignore_nicks WHERE target=?;""", (account,)
