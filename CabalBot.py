@@ -283,6 +283,22 @@ def autolinker(bot, trigger):
             bot.say(url + link)
 
 
+@plugin.find(r"\{\{(.*?)\}\}")
+def autolinker_templates(bot, trigger):
+    if not autolink.checklang(trigger.sender) or cabalutil.ignored_nick(
+        trigger.account
+    ):
+        return
+
+    else:
+        url = autolink.getlang(trigger.sender)
+        link = trigger.groups()[0].replace(" ", "_")
+        if url is None:
+            bot.say("I found the channel in the database, but there was no URL saved.")
+        else:
+            bot.say(url + "Template:" + link)
+
+
 @plugin.require_admin(message=BOTADMINMSG)
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("setlang")
