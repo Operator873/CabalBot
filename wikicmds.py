@@ -159,73 +159,44 @@ def xcon(bot, trigger):
 @plugin.command("xtools")
 def xtools(bot, trigger):
     # !xtools <project> <target>
-    project = re.sub(r'', "", trigger.group(3))
+    tricky_ones = ['commons', 'incubator', 'mediawiki', 'outreach', 'sources', 'species', 'wikidata', 'meta']
+    try:
+        project, target = trigger.group(2).split(" ", 1)
+    except ValueError:
+        bot.say("Something is missing... Syntax is !xtools <project> <target>")
+        return
 
-    wikibooks = re.search("wikibooks$", project)
-    wikimedia = re.search("wikimedia$", project)
-    wikinews = re.search("wikinews$", project)
-    wikiquote = re.search("wikiquote$", project)
-    wikisource = re.search("wikisource$", project)
-    wikiversity = re.search("wikiversity$", project)
-    wikivoyage = re.search("wikivoyage$", project)
-    wiktionary = re.search("wiktionary$", project)
-
-    count = len(trigger.group)
-    i = 4
-    target = ""
-
-    while i < count:
-        target += trigger.group(i)
-        i = i + 1
-
-    target = target.replace(" ", "_")
-
-    if wikibooks:
-        lang = re.split("wikibooks$", wikibooks.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikibooks.org/" + target)
-    elif wikimedia:
-        lang = re.split("wikimedia$", wikimedia.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikimedia.org/" + target)
-    elif wikinews:
-        lang = re.split("wikinews$", wikinews.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikinews.org/" + target)
-    elif wikiquote:
-        lang = re.split("wikiquote$", wikiquote.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikiquote.org/" + target)
-    elif wikisource:
-        lang = re.split("wikisource$", wikisource.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikisource.org/" + target)
-    elif wikiversity:
-        lang = re.split("wikiversity$", wikiversity.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikiversity.org/" + target)
-    elif wikivoyage:
-        lang = re.split("wikivoyage$", wikivoyage.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikivoyage.org/" + target)
-    elif wiktionary:
-        lang = re.split("wiktionary$", wiktionary.string)[0]
-        lang = lang.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wiktionary.org/" + target)
-    elif project == "commons":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
-    elif project == "incubator":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/incubator.wikimedia.org/" + target)
-    elif project == "mediawiki":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/www.mediawiki.org/" + target)
-    elif project == "outreach":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/outreach.wikimedia.org/" + target)
-    elif project == "sources":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikisource.org/" + target)
-    elif project == "species":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/species.wikimedia.org/" + target)
-    elif project == "wikidata":
-        bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikidata.org/" + target)
+    if project in tricky_ones:
+        if project == "commons":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
+        elif project == "incubator":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/incubator.wikimedia.org/" + target)
+        elif project == "mediawiki":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/www.mediawiki.org/" + target)
+        elif project == "outreach":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/outreach.wikimedia.org/" + target)
+        elif project == "sources":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikisource.org/" + target)
+        elif project == "species":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/species.wikimedia.org/" + target)
+        elif project == "wikidata":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/www.wikidata.org/" + target)
+        elif project == "meta":
+            bot.say("XTools: https://xtools.wmflabs.org/ec/meta.wikimedia.org/" + target)
     else:
-        lang = project.replace("_", "-")
-        bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikipedia.org/" + target)
+        try:
+            lang, proj = re.split("w", project)
+            lang = lang.replace("_", "-")
+        except ValueError:
+            lang = None
+
+        target = target.replace(" ", "_")
+
+        if lang is not None:
+            if proj == "iki":
+                bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".wikipedia.org/" + target)
+            else:
+                bot.say("XTools: https://xtools.wmflabs.org/ec/" + lang + ".w" + proj + ".org/" + target)
+
+        else:
+            bot.say("Hmm... I've tried and just can't figure out which project " + project + " is. I'm sorry.")
