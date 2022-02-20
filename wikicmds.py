@@ -16,8 +16,6 @@ def ca(bot, trigger):
     bot.say("Meta CentralAuth https://meta.wikimedia.org/wiki/Special:CentralAuth/" + target)
 
 
-
-
 @plugin.command("contribs")
 def contribs(bot, trigger):
     # !contribs <project> <target>
