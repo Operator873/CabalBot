@@ -12,6 +12,7 @@ import autolink
 import confirmedfeed
 import json
 import threading
+import oresfeed
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -27,6 +28,11 @@ def setup(bot):
     bot.memory["wikistream_stop"] = stop_event
     bot.memory["wikistream_listener"] = listen
 
+    ores_url = "https://stream.wikimedia.org/v2/stream/revision-score"
+    ores_listen = threading.Thread(target=ores_listener, args=(bot, ores_url, stop_event))
+    bot.memory["oresstream_stop"] = stop_event
+    bot.memory["oresstream_listener"] = ores_listen
+
 
 def listener(bot, url, stop_event):
     while not stop_event.is_set():
@@ -38,6 +44,20 @@ def listener(bot, url, stop_event):
                     try:
                         change = json.loads(event.data)
                         dispatch(bot, change)
+                    except ValueError:
+                        pass
+
+
+def ores_listener(bot, url, stop_event):
+    while not stop_event.is_set():
+        for event in EventSource(url):
+            if stop_event.is_set():
+                return
+            else:
+                if event.event == "message":
+                    try:
+                        change = json.loads(event.data)
+                        ores_dispatch(bot, change)
                     except ValueError:
                         pass
 
@@ -66,6 +86,11 @@ def dispatch(bot, change):
         if change["log_type"] == "abusefilter":
             if affeed.check(change):
                 affeed.report(bot, change)
+
+
+def ores_dispatch(bot, change):
+    if oresfeed.check(change):
+        oresfeed.report(bot, change)
 
 
 @plugin.require_admin(message=BOTADMINMSG)
