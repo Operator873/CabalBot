@@ -151,4 +151,3 @@ The bot will report all activity for the provided project in the current channel
 
 ```!stoprcfeed <project>```  
 Stops the RC feed for the project indicated in the channel used.
-
