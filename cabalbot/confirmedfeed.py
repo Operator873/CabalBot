@@ -3,18 +3,24 @@ import sqlite3
 import requests
 
 def make_request(api, payload, post=False):
+    headers = {
+        "User-Agent": "CabalBot v2.0 by Operator873",
+        "From": "operator873@gmail.com"
+    }
     if post:
-        r = requests.post(api, data=payload)
+        r = requests.post(api, data=payload, headers=headers)
     else:
-        r = requests.get(api, params=payload)
+        r = requests.get(api, params=payload, headers=headers)
     tmp = r.json()
     error_code = tmp.get('error', {}).get('code', None)
     if error_code == 'mwoauth-invalid-authorization':
-        print('Retrying a request')
-        return make_request(api, payload, post)
+        print('Received auth error. Halting API attempt.')
+        return False
     elif error_code is not None:
         print('ERROR: Received error code %s' % error_code)
-    return r
+        return False
+    else:
+        return r
 
 def check(change):
     db = sqlite3.connect(cabalutil.getdb())
@@ -36,7 +42,11 @@ def check(change):
             "usprop": "rights",
             "ususers": editor
         })
-        rights = r.json()["query"]["users"]["rights"]
+
+        if not r:
+            return False
+
+        rights = r.json()["query"]["users"][0]["rights"]
 
         if "autoconfirmed" not in rights:
             return True
@@ -53,10 +63,10 @@ def report(bot, change):
     c = db.cursor()
 
     channel = c.execute(
-        """SELECT channel FROM rc_feed WHERE project=?;""", (proj,)
+        """SELECT channel FROM confirmed_feed WHERE project=?;""", (proj,)
     ).fetchall()
 
-    if channel is not None:
+    if len(channel) > 0:
         if change["type"] == "log":
             no_action = [
                 "ABUSEFILTER",
@@ -142,7 +152,7 @@ def report(bot, change):
         if report is not None:
             for chan in channel:
                 if cabalutil.check_hush(chan[0]) is True:
-                    return
+                    continue
                 else:
                     bot.say(report, chan[0])
 
