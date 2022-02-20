@@ -46,7 +46,10 @@ def check(change):
         if not r:
             return False
 
-        rights = r.json()["query"]["users"][0]["rights"]
+        try:
+            rights = r.json()["query"]["users"][0]["rights"]
+        except KeyError:
+            return False
 
         if "autoconfirmed" not in rights:
             return True
