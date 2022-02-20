@@ -100,7 +100,7 @@ def report(bot, change):
                 report = (
                     "Log action: "
                     + action
-                    + " || Not confirmed user "
+                    + " || New user "
                     + editor
                     + " moved "
                     + pageLink
@@ -111,7 +111,7 @@ def report(bot, change):
                 report = (
                     "Log action: "
                     + action
-                    + " || Not confirmed user "
+                    + " || New user "
                     + editor
                     + " "
                     + pageLink
@@ -133,7 +133,7 @@ def report(bot, change):
                 report = (
                     "\x02"
                     + title
-                    + "\x02 was edited by not confirmed user \x02"
+                    + "\x02 was edited by new user \x02"
                     + editor
                     + "\x02 "
                     + chDiff
@@ -144,7 +144,7 @@ def report(bot, change):
                 report = (
                     "\x02"
                     + title
-                    + "\x02 was created by not confirmed user \x02"
+                    + "\x02 was created by new user \x02"
                     + editor
                     + "\x02 "
                     + chDiff
