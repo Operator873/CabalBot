@@ -1,7 +1,7 @@
 [![Github issues](https://img.shields.io/github/issues/Operator873/CabalBot?style=for-the-badge)](https://github.com/Operator873/CabalBot/issues)
 [![Github forks](https://img.shields.io/github/forks/Operator873/CabalBot?style=for-the-badge)](https://github.com/Operator873/CabalBot/metwork)
 [![Github stars](https://img.shields.io/github/stars/Operator873/CabalBot?style=for-the-badge)](https://github.com/Operator873/CabalBot/stargazers)
-[![Github contributors](https://img.shields.io/github/contributors/Operator873/CabalBot?style=for-the-badge)](https://github.com/Operator873/CabalBot/issues)
+[![Github contributors](https://img.shields.io/github/contributors/Operator873/CabalBot?style=for-the-badge)](https://github.com/Operator873/CabalBot/graphs/contributors)
 
 # Wikimedia CabalBot #
 A Sopel IRC bot plugin which provides a wide arrange of functions for Wikipedia/Wikimedia users. Current functions are:
