@@ -9,6 +9,7 @@ import cabalutil
 import globalwatch
 import pagewatch
 import autolink
+import confirmedfeed
 import json
 import threading
 from sopel import plugin
@@ -55,6 +56,9 @@ def dispatch(bot, change):
 
     if rcfeed.check(change):
         rcfeed.report(bot, change)
+
+    if confirmedfeed.check(change):
+        confirmedfeed.report(bot, change)
 
     if change["type"] == "log":
         if gstools.check(change["wiki"]):
@@ -265,6 +269,25 @@ def do_stoprcfeed(bot, trigger):
         return
 
     bot.say(rcfeed.stop(trigger))
+
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("startconfirmedfeed")
+def do_startrcfeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !startconfirmedfeed <project>")
+        return
+
+    bot.say(confirmedfeed.start(trigger))
+
+
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("stopconfirmedfeed")
+def do_stoprcfeed(bot, trigger):
+    if not trigger.group(3):
+        bot.say("Missing project! Syntax: !stopconfirmedfeed <project>")
+        return
+
+    bot.say(confirmedfeed.stop(trigger))
 
 
 @plugin.find(r"\[\[(.*?)\]\]")
