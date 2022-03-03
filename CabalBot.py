@@ -176,19 +176,17 @@ def watchStatus(bot, trigger):
         "wikistream_listener" in bot.memory
         and bot.memory["wikistream_listener"].is_alive() is True
     ):
-        msg = "RC stream listener is alive."
+        bot.say("RC stream listener is alive.")
     else:
-        msg = "RC stream listener is dead."
+        bot.say("RC stream listener is dead.")
 
     if (
         "ores" in bot.memory
         and bot.memory["ores"].is_alive() is True
     ):
-        msg = "ORES listener is alive."
+        bot.say("ORES listener is alive.")
     else:
-        msg = "ORES listener is dead."
-
-    bot.say(msg)
+        bot.say("ORES listener is dead.")
 
 
 @plugin.require_admin(message=BOTADMINMSG)
