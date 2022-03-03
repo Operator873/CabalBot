@@ -347,6 +347,23 @@ def do_confirmedfeed(bot, trigger):
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 
+@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.command("oresfeed", "vandalfeed", "vandalismfeed")
+def do_oresfeed(bot, trigger):
+    try:
+        action, project = trigger.group(2).split(' ', 1)
+    except ValueError:
+        bot.say("Missing project! Syntax: !oresfeed {start/stop} <project>")
+        return
+
+    if action.lower() == "start":
+        bot.say(oresfeed.start(trigger))
+    elif action.lower() == "stop":
+        bot.say(oresfeed.stop(trigger))
+    else:
+        bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
+
+
 @plugin.find(r"\[\[(.*?)\]\]")
 def autolinker(bot, trigger):
     if not autolink.checklang(trigger.sender) or cabalutil.ignored_nick(
