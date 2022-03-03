@@ -29,9 +29,9 @@ def setup(bot):
     bot.memory["wikistream_listener"] = listen
 
     ores_url = "https://stream.wikimedia.org/v2/stream/revision-score"
-    ores_listen = threading.Thread(target=ores_listener, args=(bot, ores_url, stop_event))
-    bot.memory["oresstream_stop"] = stop_event
-    bot.memory["oresstream_listener"] = ores_listen
+    ores = threading.Thread(target=ores_listener, args=(bot, ores_url, stop_event))
+    bot.memory["ores_stop"] = stop_event
+    bot.memory["ores"] = ores
 
 
 def listener(bot, url, stop_event):
