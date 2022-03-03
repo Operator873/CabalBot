@@ -319,17 +319,17 @@ def start(trigger):
         )
         return response
 
-    if checkchannel(trigger.group(3), trigger.sender):
+    if checkchannel(trigger.group(4), trigger.sender):
         response = (
             "I'm already reporting Recent Changes for "
-            + trigger.group(3)
+            + trigger.group(4)
             + " in this channel."
         )
         return response
 
-    if add_channel(trigger.group(3), trigger.sender):
+    if add_channel(trigger.group(4), trigger.sender):
         response = (
-            "I will report Recent Changes on " + trigger.group(3) + " in this channel."
+            "I will report Recent Changes on " + trigger.group(4) + " in this channel."
         )
     else:
         response = "An unknown error occurred during addition to database."
@@ -344,12 +344,12 @@ def stop(trigger):
         )
         return response
 
-    if not checkchannel(trigger.group(3), trigger.sender):
+    if not checkchannel(trigger.group(4), trigger.sender):
         response = "I'm not reporting Recent Changes in this channel."
         return response
 
-    if del_channel(trigger.group(3), trigger.sender):
-        response = "Recent Changes for " + trigger.group(3) + " have been stopped."
+    if del_channel(trigger.group(4), trigger.sender):
+        response = "Recent Changes for " + trigger.group(4) + " have been stopped."
     else:
         response = "An unknown error occurred during removal from the database."
 
