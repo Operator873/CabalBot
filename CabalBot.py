@@ -422,10 +422,16 @@ def setunignorenick(bot, trigger):
 @plugin.require_owner(message="This command is only available to the bot owner.")
 @plugin.command("restartbot")
 def do_bot_restart(bot, trigger):
-    bot.restart(trigger.group(2))
+    if trigger.group(2):
+        bot.restart("Restarting by order of " + trigger.account + " Reason: " + trigger.group(2))
+    else:
+        bot.restart("Restarting by order of " + trigger.account)
 
 
 @plugin.require_owner(message="This command is only available to the bot owner.")
 @plugin.command("botdie")
 def do_botdie(bot, trigger):
-    bot.quit(trigger.account + " ordered bot to die.")
+    if trigger.group(2):
+        bot.restart("Bot ordered to die by " + trigger.account + " Reason: " + trigger.group(2))
+    else:
+        bot.restart("Bot ordered to die by " + trigger.account)
