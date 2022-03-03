@@ -277,23 +277,20 @@ def do_stopaffeed(bot, trigger):
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("startrcfeed")
-def do_startrcfeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !startabusefeed <project>")
+@plugin.command("rcfeed")
+def do_rcfeed(bot, trigger):
+    try:
+        action, project = trigger.group(2).split(' ', 1)
+    except ValueError:
+        bot.say("Missing project! Syntax: !rcfeed {start/stop} <project>")
         return
 
-    bot.say(rcfeed.start(trigger))
-
-
-@plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("stoprcfeed")
-def do_stoprcfeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !stopabusefeed <project>")
-        return
-
-    bot.say(rcfeed.stop(trigger))
+    if action.lower() == "start":
+        bot.say(rcfeed.start(trigger))
+    elif action.lower() == "stop":
+        bot.say(rcfeed.stop(trigger))
+    else:
+        bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
 @plugin.command("startconfirmedfeed")
