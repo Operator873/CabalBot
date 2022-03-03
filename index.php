@@ -13,6 +13,7 @@
         <li>Report Abuse Filter feed directly to any channel for any project</li>
         <li>Various IRC commands to assist with integration</li>
         </ul>
+        <p>See the <a href="https://github.com/Operator873/CabalBot">repo</a></p>
         <h2>General Commands</h2>
         <p>The following commands are general commands the bot will respond to.</p>
         <p><code>!hush</code> / <code>!mute</code><br />
