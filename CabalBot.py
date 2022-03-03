@@ -381,3 +381,15 @@ def setunignorenick(bot, trigger):
     # !unignorenick <ircAccountName>
     if autolink.unignorenick(trigger.group(3)):
         bot.say("I'll stop ignoring links from " + trigger.group(3) + ".")
+
+
+@plugin.require_owner(message="This command is only available to the bot owner.")
+@plugin.command("restartbot")
+def do_bot_restart(bot, trigger):
+    bot.restart(trigger.group(2))
+
+
+@plugin.require_owner(message="This command is only available to the bot owner.")
+@plugin.command("botdie")
+def do_botdie(bot, trigger):
+    bot.quit(trigger.account + " ordered bot to die.")
