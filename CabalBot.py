@@ -1,5 +1,4 @@
 import sys
-
 sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot")
 
 import affeed

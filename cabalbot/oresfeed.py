@@ -7,7 +7,7 @@ def check(change):
     c = db.cursor()
 
     RC_exists = c.execute(
-        """SELECT * FROM ores_feed WHERE project=?;""", (change["wiki"],)
+        """SELECT * FROM ores_feed WHERE project=?;""", (change["database"],)
     ).fetchall()
 
     db.close()
@@ -33,7 +33,10 @@ def report(bot, change):
         chRev = str(change["rev_id"])
         chURL = change["meta"]["domain"]
         chDiff = chURL + "/w/index.php?diff=" + chRev
-        chComment = change["comment"]
+        if change["comment"]:
+            chComment = change["comment"]
+        else:
+            chComment = "<no edit comment>"
         editor = change["performer"]["user_text"]
         space = "\u200B"
         editor = editor[:2] + space + editor[2:]
