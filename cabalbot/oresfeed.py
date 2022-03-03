@@ -33,7 +33,7 @@ def report(bot, change):
         chRev = str(change["rev_id"])
         chURL = change["meta"]["domain"]
         chDiff = chURL + "/w/index.php?diff=" + chRev
-        if change["comment"]:
+        if "comment" in change:
             chComment = change["comment"]
         else:
             chComment = "<no edit comment>"
