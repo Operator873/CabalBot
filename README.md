@@ -137,17 +137,23 @@ Tells the bot to not autolink `[[bracket wikilinks]]` from this IRC account. Use
 ```!unnignorenick <IRCAccount>```  
 Removes the IRC Account name from the ignored list and will resume generating autolinks.
 
+```!restart``` or ```!restartbot <reason>```  
+Orders the bot to fully restart with the provided reason (not required)
+
+```!quit``` or ```!botdie <reason>```  
+Orders the bot to terminate its process with the provided reason (not required)
+
 ## Feed Admin Commands ##
 Users that are trusted and set as a Feed Admin in a particular channel have access to the following commands.
 
-```!startabusefeed <project>``` or ```!startaffeed <project>```  
+```!abusefeed``` or ```!affeed {start/stop} <project>```  
 The bot will report Abuse/Edit Filter activations on the indicated project
 
-```!stopabusefeed <project>``` or ```!stopaffeedd <project>```  
-Stops Abuse/Edit Filter reports to the channel for the project provided.
-
-```!startrcfeed <project>```  
+```!rcfeed {start/stop} <project>```  
 The bot will report all activity for the provided project in the current channel. Very noisy. There is no AI or selective reporting with this command.
 
-```!stoprcfeed <project>```  
-Stops the RC feed for the project indicated in the channel used.
+```!confirmedfeed {start/stop} <project>```  
+The bot will report all edits and action performed by editors that are not confirmed.
+
+```!oresfeed``` or ```!vandalfeed``` or ```!vandalismfeed {start/stop} <project>```  
+Report edits that are likely vandalism via the ORES stream with a probability in the report.
