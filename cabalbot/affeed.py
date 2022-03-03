@@ -115,14 +115,14 @@ def start(trigger):
         )
         return response
 
-    if checkchannel(trigger.group(3), trigger.sender):
+    if checkchannel(trigger.group(4), trigger.sender):
         response = "I'm already reporting Abuse Filter hits in this channel."
         return response
 
-    if add_channel(trigger.group(3), trigger.sender):
+    if add_channel(trigger.group(4), trigger.sender):
         response = (
             "I will report Abuse Filter activations on "
-            + trigger.group(3)
+            + trigger.group(4)
             + " in this channel."
         )
     else:
@@ -138,13 +138,13 @@ def stop(trigger):
         )
         return response
 
-    if not checkchannel(trigger.group(3), trigger.sender):
+    if not checkchannel(trigger.group(4), trigger.sender):
         response = "I'm not reporting Abuse Filter hits in this channel."
         return response
 
-    if del_channel(trigger.group(3), trigger.sender):
+    if del_channel(trigger.group(4), trigger.sender):
         response = (
-            "Abuse Filter reports for " + trigger.group(3) + " have been stopped."
+            "Abuse Filter reports for " + trigger.group(4) + " have been stopped."
         )
     else:
         response = "An unknown error occurred during removal from the database."

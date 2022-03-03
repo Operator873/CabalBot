@@ -122,8 +122,19 @@ def start_listener(bot, trigger):
             target=listener, args=(bot, url, bot.memory["wikistream_stop"])
         )
         bot.memory["wikistream_listener"] = listen
+
+    if "ores" not in bot.memory:
+        stop_event = threading.Event()
+        bot.memory["ores_stop"] = stop_event
+        ores_url = "https://stream.wikimedia.org/v2/stream/revision-score"
+        listen = threading.Thread(
+            target=ores_listener, args=(bot, ores_url, bot.memory["ores_stop"])
+        )
+        bot.memory["ores"] = listen
+
     bot.memory["wikistream_listener"].start()
-    bot.say("Listening to EventStream...")
+    bot.memory["ores"].start()
+    bot.say("Listening to EventStreams...")
 
 
 @plugin.interval(120)
@@ -142,8 +153,21 @@ def checkListener(bot):
 
         bot.memory["wikistream_listener"] = listen
         bot.memory["wikistream_listener"].start()
-    else:
-        pass
+
+    if bot.memory["ores"].is_alive() is not True:
+        del bot.memory["ores"]
+        del bot.memory["ores_stop"]
+
+        stop_event = threading.Event()
+        bot.memory["ores_stop"] = stop_event
+        ores_url = "https://stream.wikimedia.org/v2/stream/revision-score"
+        listen = threading.Thread(
+            target=ores_listener, args=(bot, ores_url, bot.memory["ores_stop"])
+        )
+        bot.memory["ores"] = listen
+
+        bot.memory["ores"] = listen
+        bot.memory["ores"].start()
 
 
 @plugin.require_admin(message=BOTADMINMSG)
@@ -153,9 +177,17 @@ def watchStatus(bot, trigger):
         "wikistream_listener" in bot.memory
         and bot.memory["wikistream_listener"].is_alive() is True
     ):
-        msg = "Listener is alive."
+        msg = "RC stream listener is alive."
     else:
-        msg = "Listener is dead."
+        msg = "RC stream listener is dead."
+
+    if (
+        "ores" in bot.memory
+        and bot.memory["ores"].is_alive() is True
+    ):
+        msg = "ORES listener is alive."
+    else:
+        msg = "ORES listener is dead."
 
     bot.say(msg)
 
@@ -164,12 +196,22 @@ def watchStatus(bot, trigger):
 @plugin.command("watchstop")
 def watchStop(bot, trigger):
     if "wikistream_listener" not in bot.memory:
-        bot.say("Listener isn't running.")
+        bot.say("RC stream listener isn't running.")
     else:
         try:
             bot.memory["wikistream_stop"].set()
             del bot.memory["wikistream_listener"]
-            bot.say("Listener stopped.")
+            bot.say("RC stream listener stopped.")
+        except Exception as e:
+            bot.say(str(e))
+
+    if "ores" not in bot.memory:
+        bot.say("ORES listener isn't running.")
+    else:
+        try:
+            bot.memory["ores_stop"].set()
+            del bot.memory["ores"]
+            bot.say("ORES listener stopped.")
         except Exception as e:
             bot.say(str(e))
 
@@ -257,23 +299,20 @@ def get_namespace(bot, trigger):
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("startabusefeed", "startaffeed")
-def do_startaffeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !startabusefeed <project>")
+@plugin.command("abusefeed", "affeed")
+def do_affeed(bot, trigger):
+    try:
+        action, project = trigger.group(2).split(' ', 1)
+    except ValueError:
+        bot.say("Missing project! Syntax: !abusefeed {start/stop} <project>")
         return
 
-    bot.say(affeed.start(trigger))
-
-
-@plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("stopabusefeed", "stopaffeed")
-def do_stopaffeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !stopabusefeed <project>")
-        return
-
-    bot.say(affeed.stop(trigger))
+    if action.lower() == "start":
+        bot.say(affeed.start(trigger))
+    elif action.lower() == "stop":
+        bot.say(affeed.stop(trigger))
+    else:
+        bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
@@ -293,23 +332,20 @@ def do_rcfeed(bot, trigger):
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("startconfirmedfeed")
-def do_startrcfeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !startconfirmedfeed <project>")
+@plugin.command("confirmedfeed")
+def do_confirmedfeed(bot, trigger):
+    try:
+        action, project = trigger.group(2).split(' ', 1)
+    except ValueError:
+        bot.say("Missing project! Syntax: !confirmedfeed {start/stop} <project>")
         return
 
-    bot.say(confirmedfeed.start(trigger))
-
-
-@plugin.require_chanmsg(message=CHANCMDMSG)
-@plugin.command("stopconfirmedfeed")
-def do_stoprcfeed(bot, trigger):
-    if not trigger.group(3):
-        bot.say("Missing project! Syntax: !stopconfirmedfeed <project>")
-        return
-
-    bot.say(confirmedfeed.stop(trigger))
+    if action.lower() == "start":
+        bot.say(confirmedfeed.start(trigger))
+    elif action.lower() == "stop":
+        bot.say(confirmedfeed.stop(trigger))
+    else:
+        bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 
 @plugin.find(r"\[\[(.*?)\]\]")
