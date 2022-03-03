@@ -1,5 +1,14 @@
 import cabalutil
 import sqlite3
+from sopel import formatting
+
+
+SAFEGROUPS = [
+    "autoconfirmed",
+    "bot",
+    "sysop",
+    "steward"
+]
 
 
 def check(change):
@@ -28,50 +37,42 @@ def report(bot, change):
         """SELECT channel FROM ores_feed WHERE project=?;""", (proj,)
     ).fetchall()
 
-    if channel is not None:
-        title = str(change["page_title"])
-        chRev = str(change["rev_id"])
-        chURL = change["meta"]["domain"]
-        chDiff = chURL + "/w/index.php?diff=" + chRev
-        if "comment" in change:
-            chComment = change["comment"]
-        else:
-            chComment = "<no edit comment>"
-        editor = change["performer"]["user_text"]
-        space = "\u200B"
-        editor = editor[:2] + space + editor[2:]
+    db.close()
 
-        if change["scores"]["damaging"]["prediction"] == "true":
-            prob = change["scores"]["damaging"]["probability"]["true"]
+    damaging = change["scores"]["damaging"]["prediction"][0]
+    goodfaith = change["scores"]["goodfaith"]["prediction"][0]
+
+    if channel is not None:
+        if damaging == "true" and goodfaith == "false":
+            # Check the editing nick for safe group memberships. If one found, stop further processing
+            actor_groups = change["performer"]["user_groups"]
+            for i in SAFEGROUPS:
+                if i in actor_groups:
+                    return
+
+            actor = change["performer"]["user_text"]
+            editor = actor[:2] + "\u200B" + actor[2:]
+            title = formatting.color(change["page_title"], formatting.colors.GREEN)
+            project = change["meta"]["domain"]
+            revid = str(change["rev_id"])
+            prob = str(change["scores"]["damaging"]["probability"]["true"])
+            link = "https://" + project + "/w/index.php?diff=" + revid
+            if "comment" in change:
+                comment = change["comment"]
+            else:
+                comment = "<no edit comment>"
+
             report = (
                 "\x02"
                 + title
-                + "\x02 was edited by \x02"
-                + editor
-                + "\x02 "
-                + chDiff
+                + "\x02 may have been vandalized (probability: "
+                + prob
+                + ") by "
+                + formatting.color(formatting.bold(editor), formatting.colors.RED)
+                + link
                 + " "
-                + chComment[:100]
-                + " Damaging probability: "
-                + prob[:6]
+                + comment
             )
-
-        #if change["scores"]["damaging"]["prediction"] == "true":
-        #    groups = change["performer"]["user_groups"]
-        #    if "autoconfirmed" not in groups or "confirmed" not in groups:
-        #        prob = change["scores"]["damaging"]["probability"]["true"]
-        #        report = (
-        #            "\x02"
-        #            + title
-        #            + "\x02 was edited by \x02"
-        #            + editor
-        #            + "\x02 "
-        #            + chDiff
-        #            + " "
-        #            + chComment[:100]
-        #            + " Damaging probability: "
-        #            + prob[:6]
-        #        )
 
         if report is not None:
             for chan in channel:
