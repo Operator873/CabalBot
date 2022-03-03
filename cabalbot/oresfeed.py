@@ -55,7 +55,7 @@ def report(bot, change):
             title = formatting.color(change["page_title"], formatting.colors.GREEN)
             project = change["meta"]["domain"]
             revid = str(change["rev_id"])
-            prob = str(change["scores"]["damaging"]["probability"]["true"])
+            prob = change["scores"]["damaging"]["probability"]["true"]
             link = "https://" + project + "/w/index.php?diff=" + revid
             if "comment" in change:
                 comment = change["comment"]
@@ -66,9 +66,10 @@ def report(bot, change):
                 "\x02"
                 + title
                 + "\x02 may have been vandalized (probability: "
-                + prob
+                + "{:.0%}".format(prob)
                 + ") by "
                 + formatting.color(formatting.bold(editor), formatting.colors.RED)
+                + " "
                 + link
                 + " "
                 + comment
