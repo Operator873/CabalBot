@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>PHP Test</title>
+        <title>CabalBot doc</title>
     </head>
 
     <body>
