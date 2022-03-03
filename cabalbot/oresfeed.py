@@ -39,8 +39,11 @@ def report(bot, change):
 
     db.close()
 
-    damaging = change["scores"]["damaging"]["prediction"][0]
-    goodfaith = change["scores"]["goodfaith"]["prediction"][0]
+    try:
+        damaging = change["scores"]["damaging"]["prediction"][0]
+        goodfaith = change["scores"]["goodfaith"]["prediction"][0]
+    except KeyError:
+        return
 
     if channel is not None:
         if damaging == "true" and goodfaith == "false":
