@@ -67,7 +67,7 @@ def report(bot, change):
 
             report = (
                 "\x02"
-                + title
+                + title.replace("_", " ")
                 + "\x02 may have been vandalized (probability: "
                 + "{:.0%}".format(prob)
                 + ") by "
