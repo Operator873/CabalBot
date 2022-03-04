@@ -1,9 +1,45 @@
 import sqlite3
 import random
+import requests
+from requests_oauthlib import OAuth1
 
 
 def getdb():
     return "wiki.db"
+
+
+def get_creds():
+    db = sqlite3.connect(getdb())
+    c = db.cursor()
+
+    creds = c.execute(
+        """SELECT * FROM auth;"""
+    ).fetchone()
+
+    db.close()
+
+    return creds
+
+
+def xmit(url, payload, action="get"):
+    prefix = "https://"
+    suffix = "/w/aphi.php"
+    api = prefix + url + suffix
+    headers = {
+        "User-Agent": "Bot873 v2.0 by Operator873 (Python 3.9)",
+        "From": "operator873@gmail.com"
+    }
+    key1, key2, key3, key4 = get_creds()
+    AUTH = OAuth1(key1, key2, key3, key4)
+
+    if action == 'post':
+        r = requests.post(api, headers=headers, data=payload, auth=AUTH)
+    elif action == 'authget':
+        r = requests.get(api, headers=headers, params=payload, auth=AUTH)
+    else:
+        r = requests.get(api, headers=headers, params=payload)
+
+    return r.json()
 
 
 def check_hush(channel):
@@ -278,3 +314,4 @@ def ignored_nick(nick):
         return True
     else:
         return False
+

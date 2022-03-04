@@ -1,5 +1,6 @@
 import cabalutil
 import sqlite3
+from sopel import formatting
 
 
 def check(change):
@@ -31,8 +32,7 @@ def report(bot, change):
     if len(channel) > 0:
 
         pageLink = change["meta"]["uri"]
-        space = "\u200B"
-        editor = change["user"][:2] + space + change["user"][2:]
+        editor = change["user"]
         logLink = (
             change["server_url"]
             + "/wiki/Special:AbuseLog/"
@@ -41,13 +41,13 @@ def report(bot, change):
         filterNumber = change["log_params"]["filter"]
 
         report = (
-            "Abuse Filter "
-            + filterNumber
-            + " was activated by "
-            + editor
+            formatting.color(formatting.bold(editor), formatting.colors.BLUE)
+            + " activated "
+            + formatting.color(formatting.bold("Abuse Filter "), formatting.colors.RED)
+            + formatting.color(formatting.bold(filterNumber), formatting.colors.RED)
             + " on "
             + pageLink
-            + " || Log Entry: "
+            + formatting.color(" || Log Entry: ", formatting.colors.GREEN)
             + logLink
         )
 

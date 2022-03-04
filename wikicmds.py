@@ -154,6 +154,16 @@ def xcon(bot, trigger):
     bot.say("xContribs: https://erwin85.toolforge.org/xcontribs.php?user=" + target)
 
 
+@plugin.command("xguc")
+def xguc(bot, trigger):
+    if trigger.group(2) != "":
+        if re.search(r"\/", trigger.group(3)):
+            bot.say("https://xtools.wmflabs.org/globalcontribs/ipr-" + trigger.group(3))
+        else:
+            bot.say("https://xtools.wmflabs.org/globalcontribs/" + trigger.group(3))
+    else:
+        bot.say("What is the target? !xguc <target>")
+
 @plugin.command("xtools")
 def xtools(bot, trigger):
     # !xtools <project> <target>
