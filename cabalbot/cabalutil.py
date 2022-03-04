@@ -23,7 +23,7 @@ def get_creds():
 
 def xmit(url, payload, action="get"):
     prefix = "https://"
-    suffix = "/w/aphi.php"
+    suffix = "/w/api.php"
     api = prefix + url + suffix
     headers = {
         "User-Agent": "Bot873 v2.0 by Operator873 (Python 3.9)",
