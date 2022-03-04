@@ -247,7 +247,7 @@ def report(bot, change):
                 report = (
                     formatting.color(title, formatting.colors.GREEN)
                     + " was created by "
-                    + formatting.color(formatting.bold(editor), formatting.s.BLUE)
+                    + formatting.color(formatting.bold(editor), formatting.colors.BLUE)
                     + " "
                     + chDiff
                     + " "
