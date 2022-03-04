@@ -241,7 +241,7 @@ def report(bot, change):
                     + " "
                     + chDiff
                     + " "
-                    + formatting.color(chComment, formatting.color.GRAY)
+                    + formatting.color(chComment, formatting.color.GREY)
                 )
             elif change["type"] == "new":
                 report = (
