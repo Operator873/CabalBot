@@ -54,7 +54,7 @@ def report(bot, change):
             elif action == "BLOCK":
                 if subType == "UNBLOCK":
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -68,7 +68,7 @@ def report(bot, change):
                     duration = change["log_params"]["duration"]
 
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -85,7 +85,7 @@ def report(bot, change):
                     )
             elif action == "MOVE":
                 report = (
-                    formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                    formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                     + action
                     + " || "
                     + editor
@@ -96,7 +96,7 @@ def report(bot, change):
                 )
             elif action == "NEWUSERS":
                 report = (
-                    formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                    formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                     + action
                     + " || New user "
                     + pageLink
@@ -106,7 +106,7 @@ def report(bot, change):
                 newGroups = change["log_params"]["newgroups"]
                 oldGroups = change["log_params"]["oldgroups"]
                 report = (
-                    formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                    formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                     + action
                     + " || "
                     + editor
@@ -122,7 +122,7 @@ def report(bot, change):
             elif action == "DELETE":
                 if subType == "RESTORE":
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -134,7 +134,7 @@ def report(bot, change):
                 elif subType == "REVISION":
                     revID = change["log_params"]["ids"]
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -147,7 +147,7 @@ def report(bot, change):
                     )
                 elif subType == "DELETE_REDIR":
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -158,7 +158,7 @@ def report(bot, change):
                     )
                 else:
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -173,7 +173,7 @@ def report(bot, change):
                 if subType == "MODIFY":
                     description = change["log_params"]["description"]
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -186,7 +186,7 @@ def report(bot, change):
                     )
                 elif subType == "UNPROTECT":
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -198,7 +198,7 @@ def report(bot, change):
                 else:
                     description = change["log_params"]["description"]
                     report = (
-                        formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                        formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                         + action
                         + " || "
                         + editor
@@ -213,7 +213,7 @@ def report(bot, change):
                     )
             else:
                 report = (
-                    formatting.color(formatting.bold("Log action: "), formatting.color.RED)
+                    formatting.color(formatting.bold("Log action: "), formatting.colors.RED)
                     + action
                     + " || "
                     + editor
@@ -235,23 +235,23 @@ def report(bot, change):
 
             if change["type"] == "edit":
                 report = (
-                    formatting.color(title, formatting.color.GREEN)
+                    formatting.color(title, formatting.colors.GREEN)
                     + " was edited by "
-                    + formatting.color(formatting.bold(editor), formatting.color.BLUE)
+                    + formatting.color(formatting.bold(editor), formatting.colors.BLUE)
                     + " "
                     + chDiff
                     + " "
-                    + formatting.color(chComment, formatting.color.GREY)
+                    + formatting.color(chComment, formatting.colors.GREY)
                 )
             elif change["type"] == "new":
                 report = (
-                    formatting.color(title, formatting.color.GREEN)
+                    formatting.color(title, formatting.colors.GREEN)
                     + " was created by "
-                    + formatting.color(formatting.bold(editor), formatting.color.BLUE)
+                    + formatting.color(formatting.bold(editor), formatting.s.BLUE)
                     + " "
                     + chDiff
                     + " "
-                    + formatting.color(chComment, formatting.color.GRAY)
+                    + formatting.color(chComment, formatting.colors.GRAY)
                 )
 
         if report is not None:
