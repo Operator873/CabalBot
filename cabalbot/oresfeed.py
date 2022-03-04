@@ -27,6 +27,28 @@ def check(change):
         return False
 
 
+def get_revision_comment(project, revid):
+    comment = ""
+    get_comment = {
+        "action": "query",
+        "format": "json",
+        "prop": "revisions",
+        "revids": revid,
+        "rvprop": "comment"
+    }
+
+    data = cabalutil.xmit(project, get_comment, "get")
+
+    raw = data["query"]["pages"]
+    try:
+        for i in raw:
+            comment = data["query"]["pages"][i]["revisions"][0]["comment"]
+    except KeyError:
+        pass
+
+    return comment
+
+
 def report(bot, change):
     proj = change["database"]
     report = None
@@ -60,19 +82,13 @@ def report(bot, change):
             revid = str(change["rev_id"])
             prob = change["scores"]["damaging"]["probability"]["true"]
             link = "https://" + project + "/w/index.php?diff=" + revid
-            if "comment" in change:
-                comment = change["comment"]
-            else:
-                comment = "<no edit comment>"
+            comment = get_revision_comment(project, revid)
 
             report = (
-                "\x02"
-                + title.replace("_", " ")
-                + "\x02 may have been vandalized (probability: "
-                + "{:.0%}".format(prob)
-                + ") by "
-                + formatting.color(formatting.bold(editor), formatting.colors.RED)
-                + " "
+                formatting.color(formatting.bold(editor), formatting.colors.BLUE)
+                + " may have vandalized "
+                + formatting.bold(title.replace("_", " "))
+                + formatting.color(formatting.bold(" (probability: {:.0%}) ".format(prob)), formatting.colors.RED)
                 + link
                 + " "
                 + comment
