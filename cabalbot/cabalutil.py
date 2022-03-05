@@ -5,7 +5,7 @@ from requests_oauthlib import OAuth1
 
 
 def getdb():
-    return "wiki.db"
+    return "/path/to/.sopel/plugins/cabal.db"
 
 
 def get_creds():
@@ -315,3 +315,17 @@ def ignored_nick(nick):
     else:
         return False
 
+def get_csrf(project):
+    req_token = {
+        "action": "query",
+        "format": "json",
+        "meta": "tokens"
+    }
+
+    d = xmit(project, req_token, "authget")
+
+    try:
+        csrf = d["query"]["tokens"]["csrftoken"]
+        return csrf
+    except KeyError:
+        return False

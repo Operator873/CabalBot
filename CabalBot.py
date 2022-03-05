@@ -9,9 +9,9 @@ import globalwatch
 import pagewatch
 import autolink
 import confirmedfeed
+import oresfeed
 import json
 import threading
-import oresfeed
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -80,7 +80,10 @@ def dispatch(bot, change):
         confirmedfeed.report(bot, change)
 
     if change["type"] == "log":
-        if gstools.check(change["wiki"]):
+        if (
+            gstools.check(change["wiki"])
+            and bot.nick == "GlobalSysBot"
+        ):
             gstools.report(bot, change)
         if change["log_type"] == "abusefilter":
             if affeed.check(change):
@@ -211,18 +214,6 @@ def watchStop(bot, trigger):
             bot.say("ORES listener stopped.")
         except Exception as e:
             bot.say(str(e))
-
-
-@plugin.require_admin(message=BOTADMINMSG)
-@plugin.command("addmember")
-def do_addmember(bot, trigger):
-    gstools.addGS(bot, trigger)
-
-
-@plugin.require_admin(message=BOTADMINMSG)
-@plugin.command("removemember")
-def do_delmember(bot, trigger):
-    gstools.delGS(bot, trigger)
 
 
 @plugin.require_chanmsg(message=CHANCMDMSG)
@@ -449,3 +440,53 @@ def do_botdie(bot, trigger):
         bot.quit("Bot ordered to die by " + trigger.account + " Reason: " + trigger.group(2))
     else:
         bot.quit("Bot ordered to die by " + trigger.account)
+
+
+@plugin.command("onirc"):
+def do_onirc(bot, trigger):
+    if bot.nick != "GlobalSysBot":
+        return
+
+    data = gstools.on_irc(trigger.group(3))
+
+    if data["ok"]:
+        for item in data["data"]:
+            bot.say(item)
+        if data["more"]:
+            bot.say(
+                "There are more pages listed. Re-run !onirc "
+                + trigger.group(3)
+                + " after deleting the above pages."
+            )
+    else:
+        bot.say(data["msg"])
+
+##########################################
+#      GlobalSysBot Commands follow      #
+##########################################
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.command("addmember")
+def do_addmember(bot, trigger):
+    bot.say(gstools.addGS(trigger))
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.command("removemember")
+def do_delmember(bot, trigger):
+    bot.say(gstools.delGS(trigger))
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(messsage=CHANCMDMSG)
+@plugin.command("addwiki")
+def add_wiki(bot, trigger):
+    if trigger.group(5) == "":
+        bot.say("Seems to be missing something. Syntax is !addwiki <project> <apiurl> <categoryname>")
+    else:
+        bot.say(gstools.add_wiki(trigger.group(3), trigger.group(4), trigger.group(5)))
+
+
+@plugin.require_admin(message=BOTADMINMSG)
+@plugin.require_chanmsg(messsage=CHANCMDMSG)
+@plugin.command("delwiki")
+def add_wiki(bot, trigger):
+    bot.say(gstools.del_wiki(trigger.group(3)))
