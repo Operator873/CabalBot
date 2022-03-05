@@ -157,3 +157,16 @@ The bot will report all edits and action performed by editors that are not confi
 
 ```!oresfeed``` or ```!vandalfeed``` or ```!vandalismfeed {start/stop} <project>```  
 Report edits that are likely vandalism via the ORES stream with a probability in the report.
+
+## GlobalSysBot Commands ##
+```!addmember <target> <WikiAccountName>```  
+Adds a new Global Sysop IRC nick to the database and associates it with their Wikimedia account.
+
+```!delmember <WikiAccountName>```  
+Deletes all IRC nicks from the database for the Wikimedia account. 
+
+```!addwiki <projectAbbreviation> <APIurl> <CSDCategory>```  
+Adds a new project to the database with the provided api url and CSD category
+
+```!delwiki <projectAbbreviation>```
+Deletes a project from the database allowing for correction or remove from GS monitoring.
