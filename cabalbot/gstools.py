@@ -183,7 +183,9 @@ def delGS(trigger):
 
 
 def on_irc(wiki):
-    response = {}
+    response = {
+        "ok": True
+    }
     if not check(wiki):
         response["ok"] = False
         response["msg"] = (
