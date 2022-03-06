@@ -244,7 +244,6 @@ def add_wiki(proj, api, cat):
     if not check(proj):
         db = sqlite3.connect(cabalutil.getdb())
         c = db.cursor()
-
         c.execute(
             """INSERT INTO GSwikis VALUES(?, ?, ?);""", (proj, api, cat)
         )
