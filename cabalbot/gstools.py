@@ -84,8 +84,6 @@ def report(bot, change):
                 + ": "
                 + formatting.color(formatting.bold(action), formatting.colors.RED)
                 + " || "
-                + editor
-                + " "
                 + pageLink
                 + " "
                 + comment[:200]
@@ -217,7 +215,7 @@ def on_irc(wiki):
         "action": "query",
         "format": "json",
         "list": "categorymembers",
-        "cmtitile": csdcat
+        "cmtitle": csdcat
     }
 
     d = cabalutil.xmit(urlpre.netloc, query, "get")
