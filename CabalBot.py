@@ -119,7 +119,7 @@ def ores_dispatch(bot, change):
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("feedadmin")
 def feedcmd(bot, trigger): # !feedadmin {add/del/list} <target>
     cabalutil.feedadmin(bot, trigger)
@@ -239,7 +239,7 @@ def watchStop(bot, trigger): # Force the listeners to halt and deletes the threa
             bot.say(str(e))
 
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("watch")
 def watch(bot, trigger): # add a new specific page to watch on a specific project
     watchAction = trigger.group(3)
@@ -270,7 +270,7 @@ def watch(bot, trigger): # add a new specific page to watch on a specific projec
 
 # !globalwatch ping on namespaceid title
 # !globalwatch add namespaceid title
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("globalwatch")
 def gwatch(bot, trigger): # Globally watch a page in a certain namespace
     watchAction = trigger.group(3)
@@ -303,13 +303,13 @@ def gwatch(bot, trigger): # Globally watch a page in a certain namespace
         bot.say("I don't recognize that command. Options are: add, del, & ping")
 
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("namespace")
 def get_namespace(bot, trigger): # Get namespace information by either number or name
     bot.say(cabalutil.namespaces(trigger))
 
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("abusefeed", "affeed")
 def do_affeed(bot, trigger): # !abusefeed {start/stop} <project> || Controls the Abuse Filter feed for this channel
     try:
@@ -326,7 +326,7 @@ def do_affeed(bot, trigger): # !abusefeed {start/stop} <project> || Controls the
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("rcfeed")
 def do_rcfeed(bot, trigger): # !rcfeed {start/stop} <project> || Controls the rc feed for this channel
     try:
@@ -342,7 +342,7 @@ def do_rcfeed(bot, trigger): # !rcfeed {start/stop} <project> || Controls the rc
     else:
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("confirmedfeed")
 def do_confirmedfeed(bot, trigger):
     # !confirmedfeed {start/stop} <project> || Controls the Confirmed feed for this channel
@@ -360,7 +360,7 @@ def do_confirmedfeed(bot, trigger):
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
 
 
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("oresfeed", "vandalfeed", "vandalismfeed")
 def do_oresfeed(bot, trigger): # # !oresfeed {start/stop} <project> || Controls the ORES feed for this channel
     try:
@@ -410,7 +410,7 @@ def autolinker_templates(bot, trigger): # Autolinker for {{Template:}} links
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("setlang")
 def setlang(bot, trigger): # Set the preferred language for a channel for Autolinks
     # !setlang enwiki https://enwp.org/
@@ -423,7 +423,7 @@ def setlang(bot, trigger): # Set the preferred language for a channel for Autoli
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("unsetlang")
 def unsetlang(bot, trigger): # Clear the set language for auto links (disables autolink)
     if autolink.rmvlang(trigger.sender):
@@ -431,7 +431,7 @@ def unsetlang(bot, trigger): # Clear the set language for auto links (disables a
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("ignorenick")
 def setignorenick(bot, trigger): # Tell the bot to NOT do autolinks for the provided IRC account name
     # !ignorenick <ircAccountName>
@@ -440,7 +440,7 @@ def setignorenick(bot, trigger): # Tell the bot to NOT do autolinks for the prov
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(message=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("unignorenick")
 def setunignorenick(bot, trigger): # Tell the bot to allow the IRC account to be autolinked again
     # !unignorenick <ircAccountName>
@@ -502,7 +502,7 @@ def do_delmember(bot, trigger):
     bot.say(gstools.delGS(trigger))
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(messsage=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("addwiki")
 def add_wiki(bot, trigger):
     if trigger.group(5) == "":
@@ -512,7 +512,7 @@ def add_wiki(bot, trigger):
 
 
 @plugin.require_admin(message=BOTADMINMSG)
-@plugin.require_chanmsg(messsage=CHANCMDMSG)
+@plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("delwiki")
 def add_wiki(bot, trigger):
     bot.say(gstools.del_wiki(trigger.group(3)))
