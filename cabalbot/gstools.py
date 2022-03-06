@@ -220,7 +220,7 @@ def on_irc(wiki):
         "cmtitile": csdcat
     }
 
-    d = cabalutil.xmit(apiurl, query, "get")
+    d = cabalutil.xmit(urlpre.netloc, query, "get")
 
     for item in d["query"]["categorymembers"]:
         entry = (

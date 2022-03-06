@@ -99,11 +99,8 @@ def dispatch(bot, change):
 
     # Dispatch Log events
     if change["type"] == "log":
-        # Handles GS Log events for GlobalSysBot
-        if (
-            gstools.check(change["wiki"])
-            and bot.nick == "GlobalSysBot"
-        ):
+        # Handles GS Log events
+        if gstools.check(change["wiki"]):
             gstools.report(bot, change)
 
         # If abuse filter hits are being reported, dispatch report
@@ -472,9 +469,6 @@ def do_botdie(bot, trigger): # Order the bot to quit with the provided message
 
 @plugin.command("onirc")
 def do_onirc(bot, trigger): # Let GlobalSysBot
-    if bot.nick != "GlobalSysBot":
-        return
-
     data = gstools.on_irc(trigger.group(3))
 
     if data["ok"]:
