@@ -121,7 +121,7 @@ def addGS(trigger):
     c = db.cursor()
 
     check = c.execute(
-        """SELECT account FROM globalsysops WHERE nick=?:""", (trigger.group(3),)
+        """SELECT account FROM globalsysops WHERE nick=?;""", (trigger.group(3),)
     ).fetchall()
 
     if len(check) == 0:
