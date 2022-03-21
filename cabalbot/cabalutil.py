@@ -12,9 +12,7 @@ def get_creds():
     db = sqlite3.connect(getdb())
     c = db.cursor()
 
-    creds = c.execute(
-        """SELECT * FROM auth;"""
-    ).fetchone()
+    creds = c.execute("""SELECT * FROM auth;""").fetchone()
 
     db.close()
 
@@ -27,14 +25,14 @@ def xmit(url, payload, action="get"):
     api = prefix + url + suffix
     headers = {
         "User-Agent": "Bot873 v2.0 by Operator873 (Python 3.9)",
-        "From": "operator873@gmail.com"
+        "From": "operator873@gmail.com",
     }
     key1, key2, key3, key4 = get_creds()
     AUTH = OAuth1(key1, key2, key3, key4)
 
-    if action == 'post':
+    if action == "post":
         r = requests.post(api, headers=headers, data=payload, auth=AUTH)
-    elif action == 'authget':
+    elif action == "authget":
         r = requests.get(api, headers=headers, params=payload, auth=AUTH)
     else:
         r = requests.get(api, headers=headers, params=payload)
@@ -149,32 +147,40 @@ def watcherSpeak(bot, trigger):
     db = sqlite3.connect(getdb())
     c = db.cursor()
 
-    doesExist = c.execute(
+    does_exist = c.execute(
         """SELECT * FROM hushchannels WHERE channel=?;""", (trigger.sender,)
     ).fetchall()
 
-    if len(doesExist) > 0:
-        try:
-            if (
-                len(
-                    c.execute(
-                        """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;""",
-                        (trigger.account, trigger.sender),
-                    ).fetchall()
+    is_feedadmin = c.execute(
+        """SELECT * FROM feed_admins WHERE nick=? AND channel=?;""",
+        (trigger.account, trigger.sender)
+    ).fetchall()
+
+    is_gs = c.execute(
+        """SELECT account from globalsysops where nick=?;""", (trigger.nick,)
+    ).fetchall()
+
+    if len(does_exist) > 0:
+        if (
+            len(is_feedadmin) > 0
+            or (
+                len(is_gs) > 0
+                and (
+                    trigger.sender == "#wikimedia-gs-internal"
+                    or trigger.sender == "#wikimedia-gs"
                 )
-                > 0
-            ):
-                c.execute(
-                    """DELETE FROM hushchannels WHERE channel=?;""", (trigger.sender,)
-                )
-                db.commit()
-                bot.say("Alright! Back to business.")
-            else:
-                bot.say("You're not authorized to execute this command.")
-        except:
-            bot.say("Ugh... something blew up. Help me " + bot.settings.core.owner)
-        finally:
+            )
+        ):
+            c.execute(
+                """DELETE FROM hushchannels WHERE channel=?;""", (trigger.sender,)
+            )
+            db.commit()
             db.close()
+            bot.say("Alright! Back to business.")
+
+        else:
+            bot.say("You're not authorized to execute this command.")
+
     else:
         db.close()
         bot.say(trigger.nick + ": I'm already in 'speak' mode.")
@@ -315,12 +321,9 @@ def ignored_nick(nick):
     else:
         return False
 
+
 def get_csrf(project):
-    req_token = {
-        "action": "query",
-        "format": "json",
-        "meta": "tokens"
-    }
+    req_token = {"action": "query", "format": "json", "meta": "tokens"}
 
     d = xmit(project, req_token, "authget")
 

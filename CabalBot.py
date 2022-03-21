@@ -123,13 +123,13 @@ def feedcmd(bot, trigger): # !feedadmin {add/del/list} <target>
 
 
 @plugin.command("speak")
-def set_speak(bot, trigger): # Adds the channel to hushchannels where the bot will not speak
+def set_speak(bot, trigger): # Removes the channel from hushchannels and allows the bot to speak
     cabalutil.watcherSpeak(bot, trigger)
 
 
 @plugin.command("hush")
 @plugin.command("mute")
-def do_hush(bot, trigger): # Removes the channel from hushchannels and allows the bot to speak
+def do_hush(bot, trigger): # Adds the channel to hushchannels where the bot will not speak
     cabalutil.watcherHush(bot, trigger)
 
 
