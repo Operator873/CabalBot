@@ -25,7 +25,7 @@ def xmit(url, payload, action="get"):
     api = prefix + url + suffix
     headers = {
         "User-Agent": "Bot873 v2.0 by Operator873 (Python 3.9)",
-        "From": "operator873@gmail.com",
+        "From": "operator873@gmail.com"
     }
     key1, key2, key3, key4 = get_creds()
     AUTH = OAuth1(key1, key2, key3, key4)
