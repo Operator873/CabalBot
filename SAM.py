@@ -629,7 +629,7 @@ def command_block(bot, trigger):
 @plugin.command('reblock')
 @plugin.nickname_commands('reblock')
 def command_reblock(bot, trigger):
-    # !block Some Nick Here p=project d=duration r=reason
+    # !reblock Some Nick Here p=project d=duration r=reason
     params = process_args(trigger.group(2))
     user = get_wp_account(trigger.account)
 
