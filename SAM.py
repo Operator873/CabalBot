@@ -818,7 +818,7 @@ def memadd(bot, trigger):
     result = sam_memory(trigger.account, trigger.group(2), "add")
 
     if result['status']:
-        bot.say(result['msg'])
+        bot.say(result['data'])
     else:
         bot.say("Error! " + result['data'])
 
@@ -829,7 +829,7 @@ def memclear(bot, trigger):
     result = sam_memory(trigger.account, None, "clear")
 
     if result['status']:
-        bot.say(result['msg'])
+        bot.say(result['data'])
     else:
         bot.say("Error! " + result['data'])
 
@@ -840,7 +840,7 @@ def memdel(bot, trigger):
     result = sam_memory(trigger.account, trigger.group(2), "del")
 
     if result['status']:
-        bot.say(result['msg'])
+        bot.say(result['data'])
     else:
         bot.say("Error! " + result['data'])
 

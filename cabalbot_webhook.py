@@ -16,8 +16,11 @@ def check_request(data):
     secret = data.args.get("secret")
     now = time()
 
-    c.execute("""DELETE FROM auth WHERE account=?;""", (account,))
-    db.commit()
+    check = c.execute("""SELECT * FROM auth WHERE account=?;""", (account,)).fetchone()
+
+    if check is not None:
+        c.execute("""DELETE FROM auth WHERE account=?;""", (account,))
+        db.commit()
 
     c.execute("""INSERT INTO auth VALUES(?, ?, ?, ?);""", (account, key, secret, now))
     db.commit()
