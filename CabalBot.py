@@ -463,6 +463,10 @@ def do_botdie(bot, trigger): # Order the bot to quit with the provided message
         bot.quit("Bot ordered to die by " + trigger.account)
 
 
+@plugin.command("commands", "help", "doc")
+def get_help(bot, trigger):
+    bot.say(trigger.nick + ": My documentation can be found at https://github.com/Operator873/CabalBot")
+
 ##########################################
 #      GlobalSysBot Commands follow      #
 ##########################################
