@@ -642,6 +642,28 @@ def command_reblock(bot, trigger):
     else:
         bot.say(do_block(user["data"], params, True))
 
+
+@plugin.command('unblock')
+@plugin.nickname_commands('unblock')
+def command_unblock(bot, trigger):
+    # !unblock <target here> p=project r=reason
+    params = process_args(trigger.group(2))
+    user = get_wp_account(trigger.account)
+
+    if not check_command(params, 3):
+        bot.say(
+            "Command is malformed. "
+            + "Syntax is: !unblock <target> p=project r=reason for block. "
+            + "Target of block must be first or be indicated with 'a=<account or target of block>'. "
+        )
+        return
+    elif not user["status"]:
+        bot.say(user["data"])
+        return
+    else:
+        bot.say(do_unblock(user["data"], params))
+
+
 @plugin.command('gblock')
 @plugin.nickname_command('gblock')
 def global_block(bot, trigger):
@@ -898,7 +920,7 @@ def memory(bot, trigger):
 
         for item in dump["data"]:
             params['a'] = item[0]
-            do_lock(user["data"], params, "lock")
+            bot.say(do_lock(user["data"], params, "lock"))
             if (
                 params['r'] == "Spam-only account: spambot"
                 or (
@@ -944,7 +966,7 @@ def memory(bot, trigger):
         else:
             for item in dump["data"]:
                 params["a"] = item[0]
-                do_block(user["data"], params, False)
+                bot.say(do_block(user["data"], params, False))
 
             sam_memory(user['data'], None, "clear")
 
