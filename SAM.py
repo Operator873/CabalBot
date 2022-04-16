@@ -1023,3 +1023,8 @@ def memory(bot, trigger):
         bot.say("I don't know the command: " + action)
         bot.say("Try something like lock, block, gblock, unblock, or cu")
 
+
+@plugin.command('login')
+@plugin.nickname_command('login')
+def sam_login(bot, trigger):
+    bot.say("Login: https://cabalbot.toolforge.org")
