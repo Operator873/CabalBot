@@ -312,6 +312,8 @@ def do_global_block(user, params, reblock):
             response = "Block was modified. New expiry: " + expiry
         elif "anononly" in block:
             response = "Anon-only block succeeded. Expiry: " + expiry
+        elif "cu" in params:
+            response = "Proxy detected! Globally blocked: " + expiry
         else:
             response = "Block succeeded. Expiry: " + expiry
     else:
@@ -730,6 +732,7 @@ def command_lock(bot, trigger):
                         'a': ip["address"],
                         'd': "3months",
                         'r': "[[m:NOP|Open proxy]]: See the [[m:WM:OP/H|help page]] if you are affected",
+                        'cu': ""
                     }
                     bot.say(do_global_block(user["data"], block_ip, False))
 
@@ -947,6 +950,7 @@ def memory(bot, trigger):
                                 'a': ip["address"],
                                 'd': "3months",
                                 'r': "[[m:NOP|Open proxy]]: See the [[m:WM:OP/H|help page]] if you are affected",
+                                'cu': ""
                             }
                             bot.say(do_global_block(user["data"], block_ip, False))
 
