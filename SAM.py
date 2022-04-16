@@ -440,6 +440,7 @@ def preflight_user(user, site, token):
             "status": False,
             "msg": creds["msg"]
         }
+        return result
     else:
         result["creds"] = creds["creds"]
 
@@ -449,6 +450,7 @@ def preflight_user(user, site, token):
             "status": False,
             "msg": csrfToken["msg"]
         }
+        return result
     else:
         result["token"] = csrfToken["msg"]
 
