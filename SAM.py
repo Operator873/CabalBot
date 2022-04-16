@@ -622,7 +622,7 @@ def command_block(bot, trigger):
 
 @plugin.command('reblock')
 @plugin.nickname_commands('reblock')
-def command_block(bot, trigger):
+def command_reblock(bot, trigger):
     # !block Some Nick Here p=project d=duration r=reason
     params = process_args(trigger.group(2))
     user = get_wp_account(trigger.account)
@@ -717,7 +717,7 @@ def command_lock(bot, trigger):
 
 @plugin.commands('unlock')
 @plugin.nickname_commands('unlock')
-def command_lock(bot, trigger):
+def command_unlock(bot, trigger):
     # !unlock Some Account r=reason
     params = process_args(trigger.group(2))
     user = get_wp_account(trigger.account)
@@ -738,7 +738,7 @@ def command_lock(bot, trigger):
 
 @plugin.command('softblock')
 @plugin.nickname_commands('softblock')
-def command_block(bot, trigger):
+def command_softblock(bot, trigger):
     # !softblock Some Nick Here p=project d=duration r=reason
     params = process_args(trigger.group(2))
     user = get_wp_account(trigger.account)
