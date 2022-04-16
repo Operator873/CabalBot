@@ -91,7 +91,7 @@ def get_creds(account):  # Assumes get_wp_account() has already found a match, b
     try:
         account, token, secret, timestamp = c.execute("""SELECT * FROM auth WHERE account=?;""", (account,)).fetchone()
     except TypeError:
-        response["msg"] = "Unknown error occurred during processing of OAuth credentials."
+        response["msg"] = NO_TOKEN
         db.close()
         return response
 
@@ -303,7 +303,7 @@ def do_global_block(user, params, reblock):
     if 'error' in gblock:
         failure = gblock['error']['globalblock'][0]
         if failure['code'] == "globalblocking-block-alreadyblocked":
-            response = params['a'] + " is already blocked."
+            response = "The target is already blocked."
         else:
             response = "Block failed! " + str(failure['message'])
     elif 'block' in gblock or 'globalblock' in gblock:
@@ -718,6 +718,9 @@ def command_lock(bot, trigger):
         )
     ):
         lwcu_identity = preflight_user(user["data"], LWCU, "csrf")
+        if not lwcu_identity["status"]:
+            return
+
         target_ip = do_lwcu_get_IP(lwcu_identity, params['a'])
 
         if target_ip["status"]:
@@ -737,7 +740,8 @@ def command_lock(bot, trigger):
                         + "https://login.wikimedia.org/w/index.php?title=Special:CheckUser&reason="
                         + params["r"].replace(" ", "_")
                         + "&user="
-                        + ip["address"]
+                        + ip["address"],
+                        trigger.nick
                     )
 
 
@@ -931,6 +935,9 @@ def memory(bot, trigger):
                 )
             ):
                 lwcu_identity = preflight_user(user["data"], LWCU, "csrf")
+                if not lwcu_identity["status"]:
+                    return
+
                 target_ip = do_lwcu_get_IP(lwcu_identity, params['a'])
 
                 if target_ip["status"]:
@@ -950,7 +957,8 @@ def memory(bot, trigger):
                                 + "https://login.wikimedia.org/w/index.php?title=Special:CheckUser&reason="
                                 + + params["r"].replace(" ", "_")
                                 + "&user="
-                                + ip["address"]
+                                + ip["address"],
+                                trigger.nick
                             )
         sam_memory(user["data"], None, "clear")
 
