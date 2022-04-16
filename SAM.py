@@ -898,13 +898,13 @@ def memory(bot, trigger):
 
         for item in dump["data"]:
             params['a'] = item[0]
-            do_lock(user, params, "lock")
+            do_lock(user["data"], params, "lock")
             if (
-                    params['r'] == "Spam-only account: spambot"
-                    or (
-                    'docu' in params
-                    and params['docu'] in ANSWERS
-            )
+                params['r'] == "Spam-only account: spambot"
+                or (
+                'docu' in params
+                and params['docu'] in ANSWERS
+                )
             ):
                 lwcu_identity = preflight_user(user["data"], LWCU, "csrf")
                 target_ip = do_lwcu_get_IP(lwcu_identity, params['a'])
