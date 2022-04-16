@@ -398,6 +398,8 @@ def process_args(args):
     if 'd' in data:
         adjust = re.sub(r"([0-9]+([0-9]+)?)", r" \1 ", data['d'])
         data['d'] = re.sub(' +', ' ', adjust).strip()
+        if data['d'] == "indef" or data['d'] == "forever":
+            data['d'] = "never"
 
     if 'r' in data:
         if data["r"].lower() == "proxy":
@@ -418,14 +420,8 @@ def process_args(args):
     return data
 
 
-def check_command(params, len):
-    if 'd' in params:
-        if params['d'] == "indef" or params['d'] == "forever":
-            params['d'] = "never"
-
-    if len(params) < len:
-        return False
-    elif params['a'] == '':
+def check_command(params, length):
+    if len(params) < length:
         return False
     else:
         return True
@@ -974,7 +970,7 @@ def memory(bot, trigger):
         if not check_command(params, 2):
             bot.say(
                 "Command is malformed. "
-                + "Syntax is: Syntax is !memory test r=Test reason. "
+                + "Syntax is: !memory test r=Test reason. "
             )
             bot.say("Memory items still intact.")
             return
