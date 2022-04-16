@@ -96,7 +96,7 @@ def get_creds(account):  # Assumes get_wp_account() has already found a match, b
         return response
 
     if (
-        min_age > timestamp
+        min_age > float(timestamp)
         or token == ""
         or secret == ""
     ):
@@ -344,9 +344,11 @@ def do_lock(user, params, action):
     lock = xmit(site, msg, "post")
 
     if 'error' in lock:
-        response = "lock action failed! " + lock['error']['info']
+        response = action + " action failed! " + lock['error']['info']
     else:
-        response = params['a'] + action + "ed."
+        response = params['a'] + " " + action + "ed."
+
+    return response
 
 
 def do_unblock(user, params):
