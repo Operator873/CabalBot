@@ -310,7 +310,7 @@ def do_global_block(user, params, reblock):
         expiry = gblock['globalblock']['expiry']
         if reblock:
             response = "Block was modified. New expiry: " + expiry
-        elif block["anononly"]:
+        elif "anononly" in block:
             response = "Anon-only block succeeded. Expiry: " + expiry
         else:
             response = "Block succeeded. Expiry: " + expiry
@@ -520,7 +520,7 @@ def do_lwcu_get_users(actor, target):
         'list': "checkuser",
         'curequest': "ipusers",
         'cutarget': target,
-        'cureason': "Checking proxy IP used by a spambot/LTA/xwiki vandal for additional accounts.",
+        'cureason': "(via SAM) Proxy IP used by a spambot/LTA/xwiki vandal/ check for additional accounts",
         'cutoken': actor["token"],
         'cutimecond': "-3 months",
         'format': "json"
@@ -555,7 +555,7 @@ def do_lwcu_get_IP(actor, target):
         'list': "checkuser",
         'curequest': "userips",
         'cutarget': target,
-        'cureason': "Checking spambot/LTA/xwiki vandal for proxy",
+        'cureason': "(via SAM) Checking spambot/LTA/xwiki vandal for proxy",
         'cutoken': actor["token"],
         'cutimecond': "-3 months",
         'format': "json"
@@ -733,7 +733,7 @@ def command_lock(bot, trigger):
                     bot.say(
                         "LWCU found accounts "
                         + "https://login.wikimedia.org/w/index.php?title=Special:CheckUser&reason="
-                        + params["r"]
+                        + params["r"].replace(" ", "_")
                         + "&user="
                         + ip["address"]
                     )
@@ -946,7 +946,7 @@ def memory(bot, trigger):
                             bot.say(
                                 "LWCU found accounts "
                                 + "https://login.wikimedia.org/w/index.php?title=Special:CheckUser&reason="
-                                + params["r"]
+                                + + params["r"].replace(" ", "_")
                                 + "&user="
                                 + ip["address"]
                             )
