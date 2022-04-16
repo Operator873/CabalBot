@@ -788,7 +788,7 @@ def add_user(bot, trigger):
 @plugin.require_owner(message="This function is only available to the bot owner.")
 @plugin.command('delsamuser')
 @plugin.nickname_command('delsamuser')
-def add_user(bot, trigger):
+def del_user(bot, trigger):
     # !delsamuser Their WP Account or IRC account
     db = sqlite3.connect(SAM_DB)
     c = db.cursor()
@@ -979,7 +979,7 @@ def memory(bot, trigger):
             return
         else:
             for item in dump["data"]:
-                params['a'] == item[0]
+                params['a'] = item[0]
                 bot.say(str(params))
     else:
         bot.say("I don't know the command: " + action)
