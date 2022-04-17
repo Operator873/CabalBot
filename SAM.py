@@ -959,7 +959,7 @@ def memory(bot, trigger):
                             bot.say(
                                 "LWCU found accounts "
                                 + "https://login.wikimedia.org/w/index.php?title=Special:CheckUser&reason="
-                                + + params["r"].replace(" ", "_")
+                                + params["r"].replace(" ", "_")
                                 + "&user="
                                 + ip["address"],
                                 trigger.nick
