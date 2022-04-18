@@ -13,7 +13,7 @@ def bullseye(bot, trigger):
 def ca(bot, trigger):
     # !ca <target>
     target = trigger.group(2)
-    bot.say("Meta CentralAuth https://meta.wikimedia.org/wiki/Special:CentralAuth/" + target)
+    bot.say("Meta CentralAuth https://meta.wikimedia.org/wiki/Special:CentralAuth/" + target.replace(' ', "_"))
 
 
 @plugin.command("contribs")
@@ -25,7 +25,7 @@ def contribs(bot, trigger):
     except ValueError:
         bot.say("Something is missing... Syntax is !contribs <project> <target>")
         return
-
+    target = target.replace(" ", "_")
     if project in tricky_ones:
         if project == "commons":
             bot.say("User contribs: https://commons.wikimedia.org/wiki/Special:Contribs/" + target)
@@ -73,7 +73,7 @@ def geo(bot, trigger):
 def google(bot, trigger):
     # !google <query>
     target = trigger.group(2)
-    bot.say("Google results: https://www.google.com/search?q=" + target)
+    bot.say("Google results: https://www.google.com/search?q=" + target.replace(" ", "_"))
 
 
 @plugin.command("guc")
@@ -115,21 +115,21 @@ def rbf(bot, trigger):
 def stalk(bot, trigger):
     # !stalk <user>
     target = trigger.group(2)
-    bot.say("Stalktoy: https://meta.toolforge.org/stalktoy/" + target)
+    bot.say("Stalktoy: https://meta.toolforge.org/stalktoy/" + target.replace(" ", "_"))
 
 
 @plugin.command("stewardry")
 def stewardry(bot, trigger):
     # !stewardry <project>
     target = trigger.group(3)
-    bot.say("Stewardry (sysop): https://meta.toolforge.org/stewardry/" + target)
+    bot.say("Stewardry (sysop): https://meta.toolforge.org/stewardry/" + target.replace(" ", "_"))
 
 
 @plugin.command("urban")
 def urban(bot, trigger):
     # !urban <query>
     target = trigger.group(2)
-    bot.say("Urban Dictionary lookup: https://www.urbandictionary.com/define.php?term=" + target)
+    bot.say("Urban Dictionary lookup: https://www.urbandictionary.com/define.php?term=" + target.replace(" ", "_"))
 
 
 @plugin.command("whois")
@@ -143,7 +143,7 @@ def whois(bot, trigger):
 def xact(bot, trigger):
     # !xact <user>
     target = trigger.group(2)
-    bot.say("CrossActivity: https://meta2.toolforge.org/crossactivity/" + target)
+    bot.say("CrossActivity: https://meta2.toolforge.org/crossactivity/" + target.replace(" ", "_"))
 
 
 @plugin.require_owner("This command has been disabled, as the tool is currently offline.")
@@ -151,7 +151,7 @@ def xact(bot, trigger):
 def xcon(bot, trigger):
     # !xcon <user>
     target = trigger.group(2)
-    bot.say("xContribs: https://erwin85.toolforge.org/xcontribs.php?user=" + target)
+    bot.say("xContribs: https://erwin85.toolforge.org/xcontribs.php?user=" + target.replace(" ", "_"))
 
 
 @plugin.command("xguc")
@@ -164,6 +164,7 @@ def xguc(bot, trigger):
     else:
         bot.say("What is the target? !xguc <target>")
 
+
 @plugin.command("xtools")
 def xtools(bot, trigger):
     # !xtools <project> <target>
@@ -174,6 +175,7 @@ def xtools(bot, trigger):
         bot.say("Something is missing... Syntax is !xtools <project> <target>")
         return
 
+    target = target.replace(" ", "_")
     if project in tricky_ones:
         if project == "commons":
             bot.say("XTools: https://xtools.wmflabs.org/ec/commons.wikimedia.org/" + target)
