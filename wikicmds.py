@@ -6,7 +6,7 @@ from sopel import plugin
 def bullseye(bot, trigger):
     # !bullseye <ip>
     target = trigger.group(3)
-    bot.say("Bullseye: https://bullseye.toolforge.org/ip/" + target)
+    bot.say("Bullseye: https://bullseye.toolforge.org/ip/" + target.replace(' ', "_"))
 
 
 @plugin.command("ca")
@@ -66,21 +66,21 @@ def contribs(bot, trigger):
 def geo(bot, trigger):
     # !geo <ip>
     target = trigger.group(3)
-    bot.say("Geolocate IP: https://whatismyipaddress.com/ip/1.1.1.1" + target)
+    bot.say("Geolocate IP: https://whatismyipaddress.com/ip/" + target)
 
 
 @plugin.command("google")
 def google(bot, trigger):
     # !google <query>
     target = trigger.group(2)
-    bot.say("Google results: https://www.google.com/search?q=" + target.replace(" ", "_"))
+    bot.say("Google results: https://www.google.com/search?q=" + target.replace(" ", "+"))
 
 
 @plugin.command("guc")
 def guc(bot, trigger):
     # !guc <target>
     target = trigger.group(2)
-    bot.say("Global contribs, last hour: https://tools.wmflabs.org/guc/?src=hr&by=date&user=" + target)
+    bot.say("Global contribs, last hour: https://tools.wmflabs.org/guc/?src=hr&by=date&user=" + target.replace(' ', "_"))
 
 
 @plugin.command("gucall")
