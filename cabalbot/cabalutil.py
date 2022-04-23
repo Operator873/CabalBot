@@ -8,6 +8,19 @@ def getdb():
     return "/path/to/.sopel/plugins/cabal.db"
 
 
+def do_sqlite(query, method):
+    db = sqlite3.connect(getdb())
+    c = db.cursor()
+
+    if method == "all":
+        data = c.execute(query).fetchall()
+    else:
+        data = c.execute(query).fetchone()
+
+    db.close()
+
+    return data
+
 def get_creds():
     db = sqlite3.connect(getdb())
     c = db.cursor()

@@ -1,17 +1,19 @@
 import sys
 sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot") # Help Sopel find the submodules we are about to load
 
-import affeed
-import rcfeed
-import gstools
-import cabalutil
-import globalwatch
-import pagewatch
-import autolink
-import confirmedfeed
-import oresfeed
 import json
 import threading
+
+import affeed
+import autolink
+import cabalutil
+import confirmedfeed
+import globalwatch
+import gstools
+import oresfeed
+import pagewatch
+import pushover
+import rcfeed
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -514,3 +516,24 @@ def add_wiki(bot, trigger):
 @plugin.command("delwiki")
 def add_wiki(bot, trigger):
     bot.say(gstools.del_wiki(trigger.group(3)))
+
+
+@plugin.require_admin()
+@plugin.require_chanmsg("This command must be used in a channel.")
+@plugin.command("admin@simplewiki", "admin")
+def regular_ping(bot, trigger):
+    if (
+        trigger.sender == "wikipedia-simple"
+        or trigger.sender == "wikipedia-simple-admins"
+    ):
+        msg = (
+            trigger.nick
+            + " in "
+            + trigger.sender
+            + " pinged admins with message: "
+            + trigger.group(2)
+        )
+        if pushover.send_alert(msg, 0):
+            bot.say("Sending pushover alerts to opted-in admins as well.")
+        else:
+            bot.say("Something broke when I was attempting pushover notifications.")
