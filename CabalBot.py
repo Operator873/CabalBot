@@ -1,9 +1,6 @@
 import sys
 sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot") # Help Sopel find the submodules we are about to load
 
-import json
-import threading
-
 import affeed
 import autolink
 import cabalutil
@@ -14,6 +11,9 @@ import oresfeed
 import pagewatch
 import pushover
 import rcfeed
+
+import json
+import threading
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -523,8 +523,8 @@ def add_wiki(bot, trigger):
 @plugin.command("admin@simplewiki", "admin")
 def regular_ping(bot, trigger):
     if (
-        trigger.sender == "wikipedia-simple"
-        or trigger.sender == "wikipedia-simple-admins"
+        trigger.sender == "#wikipedia-simple"
+        or trigger.sender == "#wikipedia-simple-admins"
     ):
         msg = (
             trigger.nick
@@ -543,8 +543,8 @@ def regular_ping(bot, trigger):
 @plugin.command("testpushover")
 def test_ping(bot, trigger):
     if (
-        trigger.sender == "wikipedia-simple"
-        or trigger.sender == "wikipedia-simple-admins"
+        trigger.sender == "#wikipedia-simple"
+        or trigger.sender == "#wikipedia-simple-admins"
     ):
         msg = (
             trigger.nick
