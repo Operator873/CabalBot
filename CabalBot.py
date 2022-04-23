@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot") # Help Sopel find the submodules we are about to load
+sys.path.insert(0, "/path/to/.sopel/plugins/cabalbot")  # Help Sopel find the submodules we are about to load
 
 import affeed
 import autolink
@@ -550,7 +550,7 @@ def test_ping(bot, trigger):
             trigger.nick
             + " in "
             + trigger.sender
-            + " trigger a test notification with message: "
+            + " triggered a test notification with message: "
             + trigger.group(2)
         )
 
