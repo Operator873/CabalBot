@@ -537,3 +537,24 @@ def regular_ping(bot, trigger):
             bot.say("Sending pushover alerts to opted-in admins as well.")
         else:
             bot.say("Something broke when I was attempting pushover notifications.")
+
+
+@plugin.require_chanmsg("This command must be used in a channel.")
+@plugin.command("testpushover")
+def test_ping(bot, trigger):
+    if (
+        trigger.sender == "wikipedia-simple"
+        or trigger.sender == "wikipedia-simple-admins"
+    ):
+        msg = (
+            trigger.nick
+            + " in "
+            + trigger.sender
+            + " trigger a test notification with message: "
+            + trigger.group(2)
+        )
+
+        if pushover.send_alert(msg, -2):
+            bot.say("Sending pushover test alert.")
+        else:
+            bot.say("Something broke when I was attempting pushover notifications.")
