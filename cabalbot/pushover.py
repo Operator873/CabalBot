@@ -19,7 +19,7 @@ def send_alert(msg, priority):
     alert = {
         "token": api_token,
         "user": group_token,
-        "title": "Bot873 Alert!",
+        "title": "CabalBot Alert!",
         "message": msg,
         "priority": priority,
     }
