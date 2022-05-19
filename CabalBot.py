@@ -53,7 +53,7 @@ def listener(bot, url, stop_event):
                     change = json.loads(event.data)
                     dispatch(bot, change)
                 except ValueError:
-                    pass
+                    continue
 
 
 def ores_listener(bot, url, stop_event):
@@ -70,7 +70,7 @@ def ores_listener(bot, url, stop_event):
                     change = json.loads(event.data)
                     ores_dispatch(bot, change)
                 except ValueError:
-                    pass
+                    continue
 
 
 def dispatch(bot, change):
