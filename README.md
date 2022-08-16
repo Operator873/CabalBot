@@ -11,52 +11,6 @@ A Sopel IRC bot plugin which provides a wide arrange of functions for Wikipedia/
 * Report Abuse Filter feed directly to any channel for any project
 * Various IRC commands to assist with integration
 
-## SAM Plugin Commands ##
-```!login```  
-Provides the Toolforge link to execute OAuth permission exchange
-
-```!block <target> p=project d=duration r=reason```  
-Blocks the target on the provided project for the duration with the reason
-
-```!reblock <targer> p=project d=duration r=reason```  
-Adds the "reblock" flag which overwrites or reblocks with the new information
-
-```!unblock <target> p=project r=reason```   
-Unblocks the target on the project with the reason
-
-```!gblock SomeIP d=duration r=reason```  
-Globally blocks the provided IP for the duration with the reason
-
-```!lock Some Account r=reason```  
-Locks the provided account with the reason
-
-```!unlock Some Account r=reason```  
-Unlocks the provided account with the reason
-
-```!softblock <target> p=project d=duration r=reason```  
-Blocks the target, but allows account creation and disables autoblock
-
-```!addsamuser IRCaccount Wikipedia account with spaces```  
-Authorizes the IRC account and associates it with a Wikipedia account in the database
-
-```!delsamuser Their WP Account or IRC account```  
-Searches the SAM user table in the database and removes any matches
-
-```!memadd <payload>```  
-Adds the payload to memory. Useful for mass spambot blocks
-
-```!memdel <payload>```  
-Removes the payload from memory, if it exists.
-
-```!memshow```  
-The bot fetches everything in memory for the user and reports it
-
-```!memclear```  
-Clears all items from the bot's memory
-
-```!memory <action> <required args>```  
-Using the items in memory, execute the provided action (like `block`, `gblock`, `lock` or `unlock`) with each memory item as the target. `<required args>` are the params required for that particular command.
-
 ## General Commands ##
 The following commands are general commands the bot will respond to.
 
