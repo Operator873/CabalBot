@@ -2,6 +2,12 @@ import re
 from sopel import plugin
 
 
+@plugin.command("gb")
+def get_gb(bot, trigger):
+    # !gb <ip>
+    bot.say("Global block: https://meta.wikimedia.org/wiki/Special:GlobalBlock/{}".format(trigger.group(3)))
+
+
 @plugin.command("bullseye")
 def bullseye(bot, trigger):
     # !bullseye <ip>
