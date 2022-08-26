@@ -159,6 +159,9 @@ The bot will report all edits and action performed by editors that are not confi
 Report edits that are likely vandalism via the ORES stream with a probability in the report.
 
 ## GlobalSysBot Commands ##
+```!onirc <project>```  
+Report CSD category members for the given project. Good for deleting pages on GS wikis.  
+
 ```!addmember <target> <WikiAccountName>```  
 Adds a new Global Sysop IRC nick to the database and associates it with their Wikimedia account.
 

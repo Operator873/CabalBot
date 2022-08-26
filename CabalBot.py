@@ -519,6 +519,10 @@ def del_wiki(bot, trigger):
     bot.say(gstools.del_wiki(trigger.group(3)))
 
 
+##########################################
+#        Commands in development         #
+##########################################
+
 @plugin.require_admin()
 @plugin.require_chanmsg("This command must be used in a channel.")
 @plugin.command("admin@simplewiki", "admin")
