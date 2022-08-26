@@ -222,20 +222,26 @@ def on_irc(wiki):
 
     d = cabalutil.xmit(urlpre.netloc, query, "get")
 
-    for item in d["query"]["categorymembers"]:
-        entry = (
-            "https://"
-            + urlpre.netloc
-            + "/wiki/"
-            + item["title"]
-        ).replace(" ", "_")
+    if len(d["query"]["categorymembers"]) > 0:
+        for item in d["query"]["categorymembers"]:
+            entry = (
+                "https://"
+                + urlpre.netloc
+                + "/wiki/"
+                + item["title"]
+            ).replace(" ", "_")
 
-        response["data"].append(entry)
+            response["data"].append(entry)
 
-    if 'continue' in d:
-        response["more"] = True
+        if 'continue' in d:
+            response["more"] = True
+        else:
+            response["more"] = False
     else:
-        response["more"] = False
+        response = {
+            "ok": False,
+            "msg": "There are currently no pages in the CSD category."
+        }
 
     return response
 
