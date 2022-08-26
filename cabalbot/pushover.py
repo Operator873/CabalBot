@@ -1,30 +1,24 @@
 import requests
-
 import cabalutil
 
 
-def send_alert(msg, priority):
-    api_token = cabalutil.do_sqlite(
-        "SELECT data FROM config WHERE key='cabalbot_pushover';",
-        "one"
-    )[0]
-
-    group_token = cabalutil.do_sqlite(
-        "SELECT data FROM config WHERE key='cabalbot_pushover_group';",
-        "one"
-    )[0]
-
+def send_alert(msg, group, bot):
+    get_api_token = "SELECT data FROM config WHERE key='{}_pushover';".format(bot.lower())
+    get_group_token = "SELECT data FROM config WHERE key='{}';".format(group.lower())
     pushover = "https://api.pushover.net/1/messages.json"
+
+    api_token = cabalutil.do_sqlite(get_api_token, "one")[0]
+    group_token = cabalutil.do_sqlite(get_group_token, "one")[0]
 
     alert = {
         "token": api_token,
         "user": group_token,
         "title": "CabalBot Alert!",
-        "message": msg,
-        "priority": priority,
+        "message": msg['data'],
+        "priority": msg['priority']
     }
 
-    if priority == 2:
+    if msg['priority'] == 2:
         alert["retry"] = 30
         alert["expire"] = 180
 

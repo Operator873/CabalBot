@@ -501,20 +501,21 @@ def do_addmember(bot, trigger):
 def do_delmember(bot, trigger):
     bot.say(gstools.delGS(trigger))
 
-@plugin.require_admin(message=BOTADMINMSG)
+
 @plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("addwiki")
 def add_wiki(bot, trigger):
     if trigger.group(5) == "":
         bot.say("Seems to be missing something. Syntax is !addwiki <project> <apiurl> <categoryname>")
     else:
-        bot.say(gstools.add_wiki(trigger.group(3), trigger.group(4), trigger.group(5)))
+        project, api, csd = trigger.group(2).split(' ', 2)
+        bot.say(gstools.add_wiki(project, api, csd))
 
 
 @plugin.require_admin(message=BOTADMINMSG)
 @plugin.require_chanmsg(CHANCMDMSG)
 @plugin.command("delwiki")
-def add_wiki(bot, trigger):
+def del_wiki(bot, trigger):
     bot.say(gstools.del_wiki(trigger.group(3)))
 
 
@@ -546,7 +547,7 @@ def test_ping(bot, trigger):
         trigger.sender == "#wikipedia-simple"
         or trigger.sender == "#wikipedia-simple-admins"
     ):
-        msg = (
+        notification = (
             trigger.nick
             + " in "
             + trigger.sender
@@ -554,7 +555,14 @@ def test_ping(bot, trigger):
             + trigger.group(2)
         )
 
-        if pushover.send_alert(msg, -2):
+        msg = {
+            'data': notification,
+            'priority': -2
+        }
+
+        pushover_group = bot.nick + "_pushover_group"
+
+        if pushover.send_alert(msg, pushover_group, bot.nick):
             bot.say("Sending pushover test alert.")
         else:
             bot.say("Something broke when I was attempting pushover notifications.")
