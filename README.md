@@ -9,7 +9,7 @@ A Sopel IRC bot plugin which provides a wide arrange of functions for Wikipedia/
 * Globally watch a page in a specified namespace across all projects
 * Report RC feed directly to any channel for any project
 * Report Abuse Filter feed directly to any channel for any project
-* Various IRC commands to assist with integration 
+* Various IRC commands to assist with integration
 
 ## General Commands ##
 The following commands are general commands the bot will respond to.
