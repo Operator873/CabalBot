@@ -531,14 +531,21 @@ def regular_ping(bot, trigger):
         trigger.sender == "#wikipedia-simple"
         or trigger.sender == "#wikipedia-simple-admins"
     ):
-        msg = (
+
+        notification = (
             trigger.nick
             + " in "
             + trigger.sender
             + " pinged admins with message: "
             + trigger.group(2)
         )
-        if pushover.send_alert(msg, 0):
+
+        msg = {
+            'data': notification,
+            'priority': -2
+        }
+
+        if pushover.send_alert(msg, bot.nick):
             bot.say("Sending pushover alerts to opted-in admins as well.")
         else:
             bot.say("Something broke when I was attempting pushover notifications.")
@@ -564,9 +571,7 @@ def test_ping(bot, trigger):
             'priority': -2
         }
 
-        pushover_group = bot.nick + "_pushover_group"
-
-        if pushover.send_alert(msg, pushover_group, bot.nick):
+        if pushover.send_alert(msg, bot.nick):
             bot.say("Sending pushover test alert.")
         else:
             bot.say("Something broke when I was attempting pushover notifications.")
