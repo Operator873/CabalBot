@@ -191,7 +191,7 @@ def on_irc(wiki):
         response["msg"] = (
             "I don't know "
             + wiki
-            + ". "
+            + "."
         )
         return response
 

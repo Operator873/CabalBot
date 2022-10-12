@@ -25,23 +25,21 @@ def get_creds():
     db = sqlite3.connect(getdb())
     c = db.cursor()
 
-    creds = c.execute("""SELECT * FROM auth;""").fetchone()
+    creds = c.execute("""SELECT data FROM config WHERE key="creds";""").fetchone()
 
     db.close()
 
-    return creds
+    return creds[0]
 
 
 def xmit(url, payload, action="get"):
     prefix = "https://"
     suffix = "/w/api.php"
     api = prefix + url + suffix
-    headers = {
-        "User-Agent": "CabalBot SAM Sopel plugin by Operator873",
-        "From": "operator873@873gear.com"
-    }
-    key1, key2, key3, key4 = get_creds()
-    AUTH = OAuth1(key1, key2, key3, key4)
+    headers = {"User-Agent": "CabalBot Sopel plugin by Operator873"}
+    creds = get_creds()
+    # key1, key2, key3, key4 = creds.split("|")
+    AUTH = OAuth1(creds.split("|"))
 
     if action == "post":
         r = requests.post(api, headers=headers, data=payload, auth=AUTH)

@@ -117,7 +117,7 @@ def rbf(bot, trigger):
     bot.say("Range block finder: https://rangeblockfinder.toolforge.org/?excludelow&ip=" + target)
 
 
-@plugin.command("stalk")
+@plugin.command("stalktoy")
 def stalk(bot, trigger):
     # !stalk <user>
     target = trigger.group(2)

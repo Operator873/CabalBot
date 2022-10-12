@@ -13,6 +13,7 @@ import pushover
 import rcfeed
 
 import json
+import random
 import threading
 from sopel import plugin
 from sseclient import SSEClient as EventSource
@@ -474,7 +475,7 @@ def get_help(bot, trigger):
 ##########################################
 
 @plugin.command("onirc")
-def do_onirc(bot, trigger): # Let GlobalSysBot
+def do_onirc(bot, trigger):
     data = gstools.on_irc(trigger.group(3))
 
     if data["ok"]:
@@ -517,6 +518,33 @@ def add_wiki(bot, trigger):
 @plugin.command("delwiki")
 def del_wiki(bot, trigger):
     bot.say(gstools.del_wiki(trigger.group(3)))
+
+
+@plugin.require_chanmsg(CHANCMDMSG)
+@plugin.command('randomwiki')
+def randomwiki(bot, trigger):
+    query = "SELECT project FROM GSwikis;"
+    wikis = cabalutil.do_sqlite(query, "all")
+
+    random_index = random.randint(0, len(wikis))
+    wiki = wikis[random_index][0]
+
+    bot.say(f"Random wiki: {wiki}")
+
+
+# @plugin.require_chanmsg(CHANCMDMSG)
+# @plugin.require_owner(message=BOTADMINMSG)
+# @plugin.command('sync-gs-wikis')
+# def sync_wikis(bot, trigger):
+#     list_of_wikis = []
+#     meta_wiki = "meta.wikimedia.org"
+#     get_wikis = {
+#         "action": "query",
+#         "format": "json",
+#         "list": "wikisets",
+#         "wsfrom": "Opted-out of global sysop wikis",
+#         "wsprop": "wikisnotincluded"
+#     }
 
 
 ##########################################

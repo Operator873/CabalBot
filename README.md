@@ -85,7 +85,7 @@ Generates a link to SQL's ipcheck tool for the provided IP address.
 ```!rbf <ip>```  
 Get a link to stwalkerster's Range Block Finder tool for the provided IP address.
 
-```!stalk <target>```  
+```!stalktoy <target>```  
 Creates a hyperlink to the stalktoy with the target as the object of the stalk.
 
 ```!stewardry <target>```  
