@@ -14,6 +14,13 @@ def do_sqlite(query, method):
 
     if method == "all":
         data = c.execute(query).fetchall()
+    elif method == "act":
+        try:
+            c.execute(query)
+            db.commit()
+            return True
+        except Exception as e:
+            return False
     else:
         data = c.execute(query).fetchone()
 

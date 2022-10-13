@@ -1,21 +1,12 @@
-import sqlite3
 import cabalutil
 from sopel import formatting
 from urllib.parse import urlparse
 
+
 def report(bot, change):
-
     gs = change["user"]
-    gs_list = None
-
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    gs_list = c.execute(
-        """SELECT account FROM globalsysops WHERE account=?;""", (gs,)
-    ).fetchall()
-
-    db.close()
+    query = f"SELECT account FROM globalsysops WHERE account={gs};"
+    gs_list = cabalutil.do_sqlite(query, 'all')
 
     report = None
 
@@ -101,14 +92,8 @@ def report(bot, change):
 
 
 def check(project):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    check = c.execute(
-        """SELECT * FROM GSwikis WHERE project=?;""", (project,)
-    ).fetchall()
-
-    db.close()
+    query = f"SELECT * FROM GSwikis WHERE project={project};"
+    check = cabalutil.do_sqlite(query, 'all')
 
     if len(check) > 0:
         return True
@@ -117,65 +102,43 @@ def check(project):
 
 
 def addGS(trigger):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    check = c.execute(
-        """SELECT account FROM globalsysops WHERE nick=?;""", (trigger.group(3),)
-    ).fetchall()
+    query = f"SELECT account FROM globalsysops WHERE nick={trigger.group(3)};"
+    check = cabalutil.do_sqlite(query, 'all')
 
     if len(check) == 0:
-        c.execute(
-            """INSERT INTO globalsysops VALUES(?, ?);""",
-            (trigger.group(3), trigger.group(4)),
-        )
-        db.commit()
-        nickCheck = c.execute(
-            """SELECT nick FROM globalsysops where account=?;""", (trigger.group(4),)
-        ).fetchall()
+        insert_query = f"INSERT INTO globalsysops VALUES({trigger.group(3)}, {trigger.group(4)});"
+        if not cabalutil.do_sqlite(insert_query, 'act'):
+            return "Failure occurred while writing to database!"
+
+        nick_query = f"SELECT nick FROM globalsysops where account={trigger.group(4)};"
+        nick_check = cabalutil.do_sqlite(nick_query, 'all')
 
         nicks = ""
-        for nick in nickCheck:
+        for nick in nick_check:
             if nicks == "":
                 nicks = nick[0]
             else:
                 nicks = nicks + " " + nick[0]
 
-        response = (
-            "Wikipedia account "
-            + trigger.group(4)
-            + " is now known by IRC nick(s): "
-            + nicks
-        )
+        response = f"Wikipedia account {trigger.group(4)} is no known by IRC nick(s): {nicks}"
     else:
-        response = (
-            trigger.group(3)
-            + " is already associated with "
-            + trigger.group(4)
-        )
+        response = f"{trigger.group(3)} is already associated with {trigger.group(4)}"
 
-    db.close()
     return response
 
 
 
 def delGS(trigger):
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-    c.execute("""DELETE FROM globalsysops WHERE account=?;""", (trigger.group(3),))
-    db.commit()
+    delete = f"DELETE FROM globalsysops WHERE account={trigger.group(3)};"
+    cabalutil.do_sqlite(delete, 'act')
 
-    check_work = c.execute(
-        """SELECT nick FROM globalsysops WHERE account=?;""", (trigger.group(3),)
-    ).fetchall()
-    db.close()
+    check_work = cabalutil.do_sqlite(
+        f"SELECT nick FROM globalsysops WHERE account={trigger.group(3)};",
+        'all'
+    )
 
     if len(check_work) == 0:
-        response = (
-            "All nicks for "
-            + trigger.group(3)
-            + " have been purged."
-        )
+        response = f"All nicks for {trigger.group(3)} have been purged."
     else:
         response = "Something wonky happened during delete verification."
 
@@ -195,14 +158,10 @@ def on_irc(wiki):
         )
         return response
 
-    db = sqlite3.connect(cabalutil.getdb())
-    c = db.cursor()
-
-    wikidata = c.execute(
-        """SELECT * FROM GSwikis WHERE project=?;""", (wiki,)
-    ).fetchone()
-
-    db.close()
+    wikidata = cabalutil.do_sqlite(
+        f"SELECT * FROM GSwikis WHERE project={wiki};",
+        'one'
+    )
 
     if wikidata is None:
         response["ok"] = False
@@ -248,43 +207,30 @@ def on_irc(wiki):
 
 def add_wiki(proj, api, cat):
     if not check(proj):
-        db = sqlite3.connect(cabalutil.getdb())
-        c = db.cursor()
-        c.execute(
-            """INSERT INTO GSwikis VALUES(?, ?, ?);""", (proj, api, cat)
-        )
-
-        db.commit()
-        db.close()
-
-        response = (
-            proj
-            + " was saved with API: "
-            + api
-            + " and category: "
-            + cat
-        )
+        if cabalutil.do_sqlite(
+            f"INSERT INTO GSwikis VALUES({proj}, {api}, {cat});",
+            'act'
+        ):
+            response = f"{proj} was saved! API: {api} Cat: {cat}"
+        else:
+            response = "An error occurred while editing the database."
     else:
-        response = "I already know " + proj
+        response = f"I already know {proj}"
 
     return response
 
 
 def del_wiki(proj):
     if check(proj):
-        db = sqlite3.connect(cabalutil.getdb())
-        c = db.cursor()
-
-        c.execute(
-            """DELETE FROM GSwikis WHERE project=?;""", (proj,)
-        )
-
-        db.commit()
-        db.close()
-
-        response = (proj + " was successfully deleted from the database.")
+        if cabalutil.do_sqlite(
+            f"DELETE FROM GSwikis WHERE project={proj};",
+            'act'
+        ):
+            response = f"{proj} was successfully deleted from the database."
+        else:
+            response = "An error occurred while editing the database."
     else:
-        response = "I don't know " + proj
+        response = f"I don't know {proj}"
 
     return response
 
