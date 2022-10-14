@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 def report(bot, change):
     gs = change["user"]
-    query = f"SELECT account FROM globalsysops WHERE account={gs};"
+    query = f"SELECT account FROM globalsysops WHERE account='{gs}';"
     gs_list = cabalutil.do_sqlite(query, 'all')
 
     report = None
@@ -92,7 +92,7 @@ def report(bot, change):
 
 
 def check(project):
-    query = f"SELECT * FROM GSwikis WHERE project={project};"
+    query = f"SELECT * FROM GSwikis WHERE project='{project}';"
     check = cabalutil.do_sqlite(query, 'all')
 
     if len(check) > 0:
@@ -102,15 +102,15 @@ def check(project):
 
 
 def addGS(trigger):
-    query = f"SELECT account FROM globalsysops WHERE nick={trigger.group(3)};"
+    query = f"SELECT account FROM globalsysops WHERE nick='{trigger.group(3)}';"
     check = cabalutil.do_sqlite(query, 'all')
 
     if len(check) == 0:
-        insert_query = f"INSERT INTO globalsysops VALUES({trigger.group(3)}, {trigger.group(4)});"
+        insert_query = f"INSERT INTO globalsysops VALUES('{trigger.group(3)}', '{trigger.group(4)}');"
         if not cabalutil.do_sqlite(insert_query, 'act'):
             return "Failure occurred while writing to database!"
 
-        nick_query = f"SELECT nick FROM globalsysops where account={trigger.group(4)};"
+        nick_query = f"SELECT nick FROM globalsysops where account='{trigger.group(4)}';"
         nick_check = cabalutil.do_sqlite(nick_query, 'all')
 
         nicks = ""
@@ -129,11 +129,11 @@ def addGS(trigger):
 
 
 def delGS(trigger):
-    delete = f"DELETE FROM globalsysops WHERE account={trigger.group(3)};"
+    delete = f"DELETE FROM globalsysops WHERE account='{trigger.group(3)}';"
     cabalutil.do_sqlite(delete, 'act')
 
     check_work = cabalutil.do_sqlite(
-        f"SELECT nick FROM globalsysops WHERE account={trigger.group(3)};",
+        f"SELECT nick FROM globalsysops WHERE account='{trigger.group(3)}';",
         'all'
     )
 
@@ -208,7 +208,7 @@ def on_irc(wiki):
 def add_wiki(proj, api, cat):
     if not check(proj):
         if cabalutil.do_sqlite(
-            f"INSERT INTO GSwikis VALUES({proj}, {api}, {cat});",
+            f"INSERT INTO GSwikis VALUES('{proj}', '{api}', '{cat}');",
             'act'
         ):
             response = f"{proj} was saved! API: {api} Cat: {cat}"
@@ -223,7 +223,7 @@ def add_wiki(proj, api, cat):
 def del_wiki(proj):
     if check(proj):
         if cabalutil.do_sqlite(
-            f"DELETE FROM GSwikis WHERE project={proj};",
+            f"DELETE FROM GSwikis WHERE project='{proj}';",
             'act'
         ):
             response = f"{proj} was successfully deleted from the database."
