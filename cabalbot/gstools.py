@@ -159,7 +159,7 @@ def on_irc(wiki):
         return response
 
     wikidata = cabalutil.do_sqlite(
-        f"SELECT * FROM GSwikis WHERE project={wiki};",
+        f"SELECT * FROM GSwikis WHERE project='{wiki}';",
         'one'
     )
 
