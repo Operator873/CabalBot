@@ -33,6 +33,7 @@ def report(bot, change):
 
         if action in no_action:
             return
+
         elif action == "BLOCK":
             flags = change["log_params"]["flags"]
             duration = change["log_params"]["duration"]
@@ -55,6 +56,7 @@ def report(bot, change):
             )
         elif action == "ABUSEFILTER":
             report = action + " activated by " + editor + " " + pageLink
+
         elif action == "MOVE":
             report = (
                 "Log action by "
@@ -120,7 +122,7 @@ def addGS(trigger):
             else:
                 nicks = nicks + " " + nick[0]
 
-        response = f"Wikipedia account {trigger.group(4)} is no known by IRC nick(s): {nicks}"
+        response = f"Wikipedia account {trigger.group(4)} is now known by IRC nick(s): {nicks}"
     else:
         response = f"{trigger.group(3)} is already associated with {trigger.group(4)}"
 
