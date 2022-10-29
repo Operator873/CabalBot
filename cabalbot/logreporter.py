@@ -2,7 +2,7 @@ import cabalutil
 from sopel import formatting
 
 
-def check(change):
+def check_for_log_reporter(change):
     log_check = f"""SELECT * FROM log_feed WHERE project="{change}";"""
     return len(cabalutil.do_sqlite(log_check, 'all')) > 0
 
@@ -76,9 +76,9 @@ def log_reporter_check_channel(project, channel):
 
 def log_reporter_channel(project, channel, operation):
     if operation == "add":
-        query = f"""INSERT INTO log_feed VALUES("{project}, "{channel}", "BLOCK");"""
+        query = f"""INSERT INTO log_feed VALUES("{project}", "{channel}", "BLOCK");"""
     else:
-        query = f"""DELETE FROM log_feed WHERE project='{project}' and channel='{channel}';"""
+        query = f"""DELETE FROM log_feed WHERE project="{project}" and channel="{channel}";"""
         
     return cabalutil.do_sqlite(query, 'act')
 

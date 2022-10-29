@@ -20,6 +20,7 @@ def do_sqlite(query, method):
             db.commit()
             return True
         except Exception as e:
+            print(str(e))
             return False
     else:
         data = c.execute(query).fetchone()
@@ -148,14 +149,8 @@ def feedadmin(bot, trigger):
 
 
 def check_feedadmin(target, channel):
-    db = sqlite3.connect(getdb())
-    c = db.cursor()
-    checkquery = """SELECT nick FROM feed_admins WHERE nick=? AND channel=?;"""
-
-    result = c.execute(checkquery, (target, channel)).fetchall()
-    db.close()
-    
-    return len(result) > 0
+    check_query = f"""SELECT nick FROM feed_admins WHERE nick="{target}" AND channel="{channel}";"""
+    return len(do_sqlite(check_query, 'all')) > 0
 
 
 def watcherSpeak(bot, trigger):

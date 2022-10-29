@@ -104,10 +104,13 @@ def dispatch(bot, change):
     # Dispatch Log events
     if change["type"] == "log":
         # Handles GS Log events
-        if gstools.check(change["wiki"]):
+        if (
+            gstools.check(change["wiki"])
+            and bot.nick == "Bot873"
+        ):
             gstools.report(bot, change)
         
-        if logreporter.check(change["wiki"]):
+        if logreporter.check_for_log_reporter(change["wiki"]):
             logreporter.log_report(bot, change)
 
         # If abuse filter hits are being reported, dispatch report
