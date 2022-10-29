@@ -9,6 +9,7 @@ def check_for_log_reporter(change):
 
 def log_report(bot, change):
     chan_query = f"""SELECT * FROM log_feed WHERE project='{change["wiki"]}';"""
+    editor = change["user"][:2] + "\u200B" + change["user"][2:]
     data = cabalutil.do_sqlite(chan_query, 'all')
     
     container = {}
