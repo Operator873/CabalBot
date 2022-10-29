@@ -10,6 +10,7 @@ def check_for_log_reporter(change):
 def log_report(bot, change):
     chan_query = f"""SELECT * FROM log_feed WHERE project='{change["wiki"]}';"""
     editor = change["user"][:2] + "\u200B" + change["user"][2:]
+    comment = str(change["comment"]).replace("\n", "")
     data = cabalutil.do_sqlite(chan_query, 'all')
     
     container = {}
@@ -31,7 +32,7 @@ def log_report(bot, change):
                     + ": "
                     + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
                     + " || "
-                    + pageLink
+                    + change["meta"]["uri"]
                     + " was "
                     + change["log_action"]
                     + "ed || Flags: "
@@ -50,7 +51,7 @@ def log_report(bot, change):
                     + " || "
                     + editor
                     + " moved "
-                    + pageLink
+                    + change["meta"]["uri"]
                     + " "
                     + comment[:200]
             )
@@ -61,7 +62,7 @@ def log_report(bot, change):
                     + ": "
                     + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
                     + " || "
-                    + pageLink
+                    + change["meta"]["uri"]
                     + " "
                     + comment[:200]
             )
