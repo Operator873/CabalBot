@@ -87,7 +87,7 @@ def log_reporter_action(trigger, operation):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
         return "You are not a feed admin!"
 
-    if not log_reporter_checkchannel(trigger.group(4), trigger.sender):
+    if not log_reporter_check_channel(trigger.group(4), trigger.sender):
         return f"I'm not reporting log actions for {trigger.group(4)} in this channel."
     
     if operation.lower() in ['del', 'delete', 'rm', 'remove', '-']:
@@ -110,7 +110,7 @@ def start_log_reporter(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
         return "You are not a feed admin!"
 
-    if log_reporter_checkchannel(trigger.group(4), trigger.sender):
+    if log_reporter_check_channel(trigger.group(4), trigger.sender):
         response = (
             f"I'm already reporting log events for {trigger.group(4)}."
             + " Were you looking for !logreporter add <project> <LOG TYPE> perhaps?"
@@ -133,7 +133,7 @@ def stop_log_reporter(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
         return "You are not a feed admin!"
 
-    if not log_reporter_checkchannel(trigger.group(4), trigger.sender):
+    if not log_reporter_check_channel(trigger.group(4), trigger.sender):
         return f"I'm not reporting log actions on {trigger.group(4)} in this channel."
 
     if log_reporter_del_channel(trigger.group(4), trigger.sender):
