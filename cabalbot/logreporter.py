@@ -4,15 +4,15 @@ from sopel import formatting
 
 def check_for_log_reporter(change):
     log_check = f"""SELECT * FROM log_feed WHERE project="{change}";"""
-    return len(cabalutil.do_sqlite(log_check, 'all')) > 0
+    return len(cabalutil.do_sqlite(log_check, "all")) > 0
 
 
 def log_report(bot, change):
     chan_query = f"""SELECT * FROM log_feed WHERE project='{change["wiki"]}';"""
     editor = change["user"][:2] + "\u200B" + change["user"][2:]
     comment = str(change["comment"]).replace("\n", "")
-    data = cabalutil.do_sqlite(chan_query, 'all')
-    
+    data = cabalutil.do_sqlite(chan_query, "all")
+
     container = {}
     for item in data:
         project, channel, action = item
@@ -20,50 +20,56 @@ def log_report(bot, change):
             container[channel].append(action.upper())
         else:
             container[channel] = [action.upper()]
-    
+
     for chan in container:
         if change["log_type"].upper() not in container[chan]:
             continue
 
         if change["log_type"].upper() == "BLOCK":
-            if change['log_action'].upper() == "BLOCK":
+            if change["log_action"].upper() == "BLOCK":
                 block_info = f"{change['log_action']}ed || Flags: {change['log_params']['flags']} || Duration: {change['log_params']['duration']}"
             else:
                 block_info = f"{change['log_action']}ed"
             report = (
-                    "Log action by "
-                    + formatting.color(editor, formatting.colors.GREEN)
-                    + ": "
-                    + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
-                    + " || "
-                    + change["meta"]["uri"]
-                    + " was "
-                    + block_info
-                    + " || Comment: "
-                    + comment[:200]
+                "Log action by "
+                + formatting.color(editor, formatting.colors.GREEN)
+                + ": "
+                + formatting.color(
+                    formatting.bold(change["log_type"].upper()), formatting.colors.RED
+                )
+                + " || "
+                + change["meta"]["uri"]
+                + " was "
+                + block_info
+                + " || Comment: "
+                + comment[:200]
             )
         elif change["log_type"].upper() == "MOVE":
             report = (
-                    "Log action by "
-                    + formatting.color(editor, formatting.colors.GREEN)
-                    + ": "
-                    + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
-                    + " || "
-                    + editor
-                    + change["log_action_comment"]
-                    + " "
-                    + comment[:200]
+                "Log action by "
+                + formatting.color(editor, formatting.colors.GREEN)
+                + ": "
+                + formatting.color(
+                    formatting.bold(change["log_type"].upper()), formatting.colors.RED
+                )
+                + " || "
+                + editor
+                + change["log_action_comment"]
+                + " "
+                + comment[:200]
             )
         else:
             report = (
-                    "Log action by "
-                    + formatting.color(editor, formatting.colors.GREEN)
-                    + ": "
-                    + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
-                    + " || "
-                    + change["meta"]["uri"]
-                    + " "
-                    + comment[:200]
+                "Log action by "
+                + formatting.color(editor, formatting.colors.GREEN)
+                + ": "
+                + formatting.color(
+                    formatting.bold(change["log_type"].upper()), formatting.colors.RED
+                )
+                + " || "
+                + change["meta"]["uri"]
+                + " "
+                + comment[:200]
             )
 
         if not cabalutil.check_hush(chan):
@@ -72,7 +78,7 @@ def log_report(bot, change):
 
 def log_reporter_check_channel(project, channel):
     query = f"""SELECT channel FROM log_feed WHERE project='{project}' and channel='{channel}';"""
-    return len(cabalutil.do_sqlite(query, 'all')) > 0
+    return len(cabalutil.do_sqlite(query, "all")) > 0
 
 
 def log_reporter_channel(project, channel, operation):
@@ -80,8 +86,8 @@ def log_reporter_channel(project, channel, operation):
         query = f"""INSERT INTO log_feed VALUES("{project}", "{channel}", "BLOCK");"""
     else:
         query = f"""DELETE FROM log_feed WHERE project="{project}" and channel="{channel}";"""
-        
-    return cabalutil.do_sqlite(query, 'act')
+
+    return cabalutil.do_sqlite(query, "act")
 
 
 def log_reporter_action(trigger, operation):
@@ -90,22 +96,24 @@ def log_reporter_action(trigger, operation):
 
     if not log_reporter_check_channel(trigger.group(4), trigger.sender):
         return f"I'm not reporting log actions for {trigger.group(4)} in this channel."
-    
-    if operation.lower() in ['del', 'delete', 'rm', 'remove', '-']:
+
+    if operation.lower() in ["del", "delete", "rm", "remove", "-"]:
         query = f"""DELETE FROM log_feed WHERE project="{trigger.group(4)}" and channel="{trigger.sender}" and action="{trigger.group(5)}";"""
-    elif operation.lower() in ['add', '+']:
+    elif operation.lower() in ["add", "+"]:
         query = f"""INSERT INTO log_feed VALUES("{trigger.group(4)}", "{trigger.sender}", "{trigger.group(5)}");"""
     else:
         return "Command seems malformed. Options are like add, del, -, +"
 
-    if cabalutil.do_sqlite(query, 'act'):
-        if operation.lower() in ['add', '+']:
-            return f"{trigger.group(5)} added as reportable action for {trigger.group(4)}."
+    if cabalutil.do_sqlite(query, "act"):
+        if operation.lower() in ["add", "+"]:
+            return (
+                f"{trigger.group(5)} added as reportable action for {trigger.group(4)}."
+            )
         else:
             return f"{trigger.group(5)} removed from reportable action on {trigger.group(4)}."
     else:
         return "An unknown error occurred while writing to the database."
-        
+
 
 def start_log_reporter(trigger):
     if not cabalutil.check_feedadmin(trigger.account, trigger.sender):
@@ -121,7 +129,7 @@ def start_log_reporter(trigger):
     if log_reporter_channel(trigger.group(4), trigger.sender, "add"):
         response = (
             f"Log reporter activated for {trigger.group(4)} in this channel."
-            + "BLOCK events have been added by default."
+            + " BLOCK events have been added by default."
             + " Please use !logreporter add <project> <LOG EVENT TYPE> to add others."
             + " Example: !logreporter add MOVE"
         )
@@ -137,7 +145,7 @@ def stop_log_reporter(trigger):
     if not log_reporter_check_channel(trigger.group(4), trigger.sender):
         return f"I'm not reporting log actions on {trigger.group(4)} in this channel."
 
-    if log_reporter_channel(trigger.group(4), trigger.sender, 'del'):
+    if log_reporter_channel(trigger.group(4), trigger.sender, "del"):
         return "Log reporter stopped in this channel."
     else:
         return "An unknown error occurred while writing to the database."

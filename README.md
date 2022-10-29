@@ -146,6 +146,14 @@ Orders the bot to terminate its process with the provided reason (not required)
 ## Feed Admin Commands ##
 Users that are trusted and set as a Feed Admin in a particular channel have access to the following commands.
 
+```!logreporter {start/stop} <project>```  
+Starts log reporter for the specified project with default action BLOCK enabled.  
+
+```!logreporter {add/del} <project> <action>```  
+Adds the action provided to the list of log events that should be reported. Any `log_type` sent by Wikimedia EventStream can be added.
+Some examples are:  
+```['abusefilter', 'upload', 'move', 'thanks', 'delete', 'review', 'patrol', 'newusers', 'block', 'growthexperiments', 'pagetriage-curation', 'pagetriage-copyvio', 'protect', 'stable', 'merge', 'tag', 'pagetranslation', 'import', 'notifytranslators', 'massmessage', 'globalauth', 'gblblock']```
+
 ```!abusefeed``` or ```!affeed {start/stop} <project>```  
 The bot will report Abuse/Edit Filter activations on the indicated project
 
