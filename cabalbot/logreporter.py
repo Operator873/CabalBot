@@ -93,7 +93,7 @@ def log_reporter_action(trigger, operation):
     if operation.lower() in ['del', 'delete', 'rm', 'remove', '-']:
         query = f"""DELETE FROM log_feed WHERE project="{trigger.group(4)}" and channel="{trigger.sender}" and action="{trigger.group(5)}";"""
     elif operation.lower() in ['add', '+']:
-        query = f"""INSERT INTO log_feed VALUES("{trigger.group(4)}", "{trigger.sender}", "{trigger.group(5)}";"""
+        query = f"""INSERT INTO log_feed VALUES("{trigger.group(4)}", "{trigger.sender}", "{trigger.group(5)}");"""
     else:
         return "Command seems malformed. Options are like add, del, -, +"
 
