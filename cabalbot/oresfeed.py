@@ -112,11 +112,8 @@ def checkchannel(project, channel):
     ).fetchall()
 
     db.close()
-
-    if len(check) > 0:
-        return True
-    else:
-        return False
+    
+    return len(check) > 0
 
 
 def add_channel(project, channel):

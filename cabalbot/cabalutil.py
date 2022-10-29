@@ -154,11 +154,8 @@ def check_feedadmin(target, channel):
 
     result = c.execute(checkquery, (target, channel)).fetchall()
     db.close()
-
-    if len(result) > 0:
-        return True
-    else:
-        return False
+    
+    return len(result) > 0
 
 
 def watcherSpeak(bot, trigger):

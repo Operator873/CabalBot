@@ -11,6 +11,7 @@ import oresfeed
 import pagewatch
 import pushover
 import rcfeed
+import logreporter
 
 import json
 import random
@@ -105,6 +106,9 @@ def dispatch(bot, change):
         # Handles GS Log events
         if gstools.check(change["wiki"]):
             gstools.report(bot, change)
+        
+        if logreporter.check(change["wiki"]):
+            logreporter.log_report(bot, change)
 
         # If abuse filter hits are being reported, dispatch report
         if change["log_type"] == "abusefilter":
@@ -375,6 +379,22 @@ def do_oresfeed(bot, trigger): # # !oresfeed {start/stop} <project> || Controls 
         bot.say(oresfeed.stop(trigger))
     else:
         bot.say("I'm not sure how to " + action + ". Try 'start' and 'stop'.")
+
+
+#################################
+#     Log Reporter Commands     #
+#################################
+
+@plugin.command("logreporter")
+def handle_log_reporter(bot, trigger):
+    if trigger.group(3).lower() in ['del', 'delete', 'rm', 'remove', '-', 'add', '+']:
+        bot.say(logreporter.log_reporter_action(trigger, trigger.group(3)))
+    elif trigger.group(3).lower() == "start":
+        bot.say(logreporter.start_log_reporter(trigger))
+    elif trigger.group(3).lower() == "stop":
+        bot.say(logreporter.stop_log_reporter(trigger))
+    else:
+        bot.say("Command seems malformed. Syntax is: !logreporter <start/stop/add/del> <project> <args>")
 
 
 @plugin.find(r"\[\[(.*?)\]\]")
