@@ -117,7 +117,7 @@ def start_log_reporter(trigger):
         )
         return response
 
-    if log_reporter_add_channel(trigger.group(4), trigger.sender):
+    if log_reporter_channel(trigger.group(4), trigger.sender, "add"):
         response = (
             f"Log reporter activated for {trigger.group(4)} in this channel."
             + "BLOCK events have been added by default."
@@ -136,7 +136,7 @@ def stop_log_reporter(trigger):
     if not log_reporter_check_channel(trigger.group(4), trigger.sender):
         return f"I'm not reporting log actions on {trigger.group(4)} in this channel."
 
-    if log_reporter_del_channel(trigger.group(4), trigger.sender):
+    if log_reporter_channel(trigger.group(4), trigger.sender, 'del'):
         return "Log reporter stopped in this channel."
     else:
         return "An unknown error occurred while writing to the database."
