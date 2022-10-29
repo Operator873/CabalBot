@@ -26,6 +26,10 @@ def log_report(bot, change):
             continue
 
         if change["log_type"].upper() == "BLOCK":
+            if change['log_action'].upper() == "BLOCK":
+                block_info = f"{change['log_action']}ed || Flags: {change['log_params']['flags']} || Duration: {change['log_params']['duration']}"
+            else:
+                block_info = f"{change['log_action']}ed"
             report = (
                     "Log action by "
                     + formatting.color(editor, formatting.colors.GREEN)
@@ -34,11 +38,7 @@ def log_report(bot, change):
                     + " || "
                     + change["meta"]["uri"]
                     + " was "
-                    + change["log_action"]
-                    + "ed || Flags: "
-                    + change["log_params"]["flags"]
-                    + " || Duration: "
-                    + change["log_params"]["duration"]
+                    + block_info
                     + " || Comment: "
                     + comment[:200]
             )
@@ -50,8 +50,7 @@ def log_report(bot, change):
                     + formatting.color(formatting.bold(change['log_type'].upper()), formatting.colors.RED)
                     + " || "
                     + editor
-                    + " moved "
-                    + change["meta"]["uri"]
+                    + change["log_action_comment"]
                     + " "
                     + comment[:200]
             )
