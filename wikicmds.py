@@ -22,6 +22,10 @@ def get_category_pages(bot, category):
 
     simple_wiki = "https://simple.wikipedia.org/wiki/"
 
+    if category == "Category:Current requests for deletion":
+        bot.say(f"There are currently {len(data['query']['categorymembers'])} pages listed at RfD.")
+        return
+
     if len(data['query']['categorymembers']) == 0:
         bot.say("There are no pages marked for QD.")
     elif len(data['query']['categorymembers']) <= 10:
@@ -29,7 +33,7 @@ def get_category_pages(bot, category):
         for page in data['query']['categorymembers']:
             bot.say(f"{simple_wiki}{page['title']}")
     elif len(data['query']['categorymembers']) > 10:
-        bot.say(f"There are more than 10 pages listed. Please see {simple_wiki}/{category}")
+        bot.say(f"There are more than 10 pages listed. Please see {simple_wiki}{category.replace(' ', '_')}")
     else:
         bot.say("Something borked. :/")
 
