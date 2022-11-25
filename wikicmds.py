@@ -1,6 +1,40 @@
 import re
 from sopel import plugin
+import requests
 
+
+def get_category_pages(bot, category):
+    if not re.search(r'simple', trigger.sender):
+        return
+
+    api_url = "https://simple.wikipedia.org/w/api.php"
+
+    query = {
+        "action": "query",
+        "list": "categorymembers",
+        "cmtitle": category,
+        "cmlimit": 500,
+        "format": "json"
+    }
+
+    data = requests.get(api_url, params=query).json()
+
+    if 'query' not in data:
+        bot.say("Unknown error fetching category members.")
+        return
+
+    simple_wiki = "https://simple.wikipedia.org/wiki/"
+
+    if len(data['query']['categorymembers']) == 0:
+        bot.say("There are no pages marked for QD.")
+    elif len(data['query']['categorymembers']) <= 10:
+        bot.say("The following pages are marked for QD:")
+        for page in data['query']['categorymembers']:
+            bot.say(f"{simple_wiki}{page['title']}")
+    elif len(data['query']['categorymembers']) > 10:
+        bot.say(f"There are more than 10 pages listed. Please see {simple_wiki}/{category}")
+    else:
+        bot.say("Something borked. :/")
 
 @plugin.command("gb")
 def get_gb(bot, trigger):
@@ -216,3 +250,19 @@ def xtools(bot, trigger):
 
         else:
             bot.say("Hmm... I've tried and just can't figure out which project " + project + " is. I'm sorry.")
+
+
+@plugin.command('qd')
+def get_csd(bot, trigger):
+    if not re.search(r'simple', trigger.sender):
+        return
+    
+    get_category_pages(bot, "Category:Quick deletion requests")
+
+@plugin.command('rfd')
+def get_rfd(bot, trigger):
+    if not re.search(r'simple', trigger.sender):
+        return
+
+    get_category_pages(bot, "Category:Current requests for deletion")
+    
