@@ -4,9 +4,6 @@ import requests
 
 
 def get_category_pages(bot, category):
-    if not re.search(r'simple', trigger.sender):
-        return
-
     api_url = "https://simple.wikipedia.org/w/api.php"
 
     query = {
