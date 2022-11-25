@@ -23,9 +23,8 @@ def get_category_pages(bot, category):
     simple_wiki = "https://simple.wikipedia.org/wiki/"
 
     if category == "Category:Current requests for deletion":
-        handy_link = simple_wiki + category
         bot.say(
-            f"There are currently {len(data['query']['categorymembers'])} pages listed at RfD. {handy_link.replace(' ', '_')}"
+            f"There are currently {len(data['query']['categorymembers'])} pages listed at RfD. {simple_wiki}WP:RFD"
         )
         return
 
