@@ -17,7 +17,7 @@ The following commands are general commands the bot will respond to.
 ```!hush``` / ```!mute```  
 Temporarily stop all commands to this channel. The bot will snitch who hushed it. Useful during mass actions.
 
-```!speak```  
+```!speak``` / ```!unmute```  
 Resume reporting changes to the channel.
 
 ```!namespace {(int) OR (string)}```  
