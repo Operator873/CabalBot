@@ -220,7 +220,7 @@ def watcherHush(bot, trigger):
             or trigger.sender == "#wikimedia-gs"
         ):
             isGS = c.execute(
-                """SELECT account from globalsysops where nick=?;""", (trigger.nick,)
+                """SELECT account from globalsysops where nick=?;""", (trigger.account,)
             ).fetchall()
             if len(isGS) > 0:
                 try:

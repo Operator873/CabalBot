@@ -22,6 +22,8 @@ def report(bot, change):
         "IMPORT",
         "PAGETRANSLATION",
         "THANKS",
+        "GLOBALAUTH",
+        "GBLBLOCK"
     ]
 
     if len(gs_list) > 0:
