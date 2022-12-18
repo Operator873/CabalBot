@@ -133,6 +133,7 @@ def feedcmd(bot, trigger): # !feedadmin {add/del/list} <target>
 
 
 @plugin.command("speak")
+@plugin.command("unmute")
 def set_speak(bot, trigger): # Removes the channel from hushchannels and allows the bot to speak
     cabalutil.watcherSpeak(bot, trigger)
 
