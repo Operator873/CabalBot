@@ -29,6 +29,7 @@ def do_sqlite(query, method):
 
     return data
 
+
 def get_creds():
     db = sqlite3.connect(getdb())
     c = db.cursor()

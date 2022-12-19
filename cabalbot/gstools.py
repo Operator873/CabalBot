@@ -4,102 +4,79 @@ from urllib.parse import urlparse
 
 
 def report(bot, change):
-    gs = change["user"]
-    query = f"SELECT account FROM globalsysops WHERE account='{gs}';"
-    gs_list = cabalutil.do_sqlite(query, 'all')
-
-    report = None
-
-    no_action = [
-        "NEWUSERS",
-        "RIGHTS",
-        "PATROL",
-        "REVIEW",
+    do_report = [
+        "BLOCK",
+        "DELETE",
         "ABUSEFILTER",
-        "MASSMESSAGE",
-        "RENAMEUSER",
-        "MOVE",
-        "IMPORT",
-        "PAGETRANSLATION",
-        "THANKS",
-        "GLOBALAUTH",
-        "GBLBLOCK"
+        "MOVE"
     ]
 
-    if len(gs_list) > 0:
+    action = str(change["log_type"]).upper()
+    pageLink = change["meta"]["uri"]
+    editor = change["user"][:2] + "\u200B" + change["user"][2:]
+    comment = str(change["comment"]).replace("\n", "")
 
-        action = str(change["log_type"]).upper()
-        pageLink = change["meta"]["uri"]
-        editor = change["user"][:2] + "\u200B" + change["user"][2:]
-        comment = str(change["comment"]).replace("\n", "")
-
-        if action in no_action:
-            return
-
-        elif action == "BLOCK":
-            flags = change["log_params"]["flags"]
-            duration = change["log_params"]["duration"]
-            actionType = change["log_action"]
-            report = (
-                "Log action by "
-                + formatting.color(editor, formatting.colors.GREEN)
-                + ": "
-                + formatting.color(formatting.bold(action), formatting.colors.RED)
-                + " || "
-                + pageLink
-                + " was "
-                + actionType
-                + "ed || Flags: "
-                + flags
-                + " || Duration: "
-                + duration
-                + " || Comment: "
-                + comment[:200]
-            )
-        elif action == "ABUSEFILTER":
-            report = action + " activated by " + editor + " " + pageLink
-
-        elif action == "MOVE":
-            report = (
-                "Log action by "
-                + formatting.color(editor, formatting.colors.GREEN)
-                + ": "
-                + formatting.color(formatting.bold(action), formatting.colors.RED)
-                + " || "
-                + editor
-                + " moved "
-                + pageLink
-                + " "
-                + comment[:200]
-            )
-        else:
-            report = (
-                "Log action by "
-                + formatting.color(editor, formatting.colors.GREEN)
-                + ": "
-                + formatting.color(formatting.bold(action), formatting.colors.RED)
-                + " || "
-                + pageLink
-                + " "
-                + comment[:200]
-            )
-
-        if report is not None:
-            channel = "#wikimedia-gs-internal"
-
-            if cabalutil.check_hush(channel) is True:
-                return
-            else:
-                bot.say(report, channel)
-    else:
+    if action not in do_report:
         return
 
+    elif action == "BLOCK":
+        flags = change["log_params"]["flags"]
+        duration = change["log_params"]["duration"]
+        actionType = change["log_action"]
+        report = (
+            "Log action by "
+            + formatting.color(editor, formatting.colors.GREEN)
+            + ": "
+            + formatting.color(formatting.bold(action), formatting.colors.RED)
+            + " || "
+            + pageLink
+            + " was "
+            + actionType
+            + "ed || Flags: "
+            + flags
+            + " || Duration: "
+            + duration
+            + " || Comment: "
+            + comment[:200]
+        )
+    elif action == "ABUSEFILTER":
+        report = action + " activated by " + editor + " " + pageLink
 
-def check(project):
-    query = f"SELECT * FROM GSwikis WHERE project='{project}';"
-    check = cabalutil.do_sqlite(query, 'all')
+    elif action == "MOVE":
+        report = (
+            "Log action by "
+            + formatting.color(editor, formatting.colors.GREEN)
+            + ": "
+            + formatting.color(formatting.bold(action), formatting.colors.RED)
+            + " || "
+            + editor
+            + " moved "
+            + pageLink
+            + " "
+            + comment[:200]
+        )
+    else:
+        report = (
+            "Log action by "
+            + formatting.color(editor, formatting.colors.GREEN)
+            + ": "
+            + formatting.color(formatting.bold(action), formatting.colors.RED)
+            + " || "
+            + pageLink
+            + " "
+            + comment[:200]
+        )
 
-    if len(check) > 0:
+    if not cabalutil.check_hush("#wikimedia-gs-internal"):
+        bot.say(report, "#wikimedia-gs-internal")
+
+
+def check(project, user):
+    query_wiki = f"SELECT * FROM GSwikis WHERE project='{project}';"
+    query_actor = f"SELECT account FROM globalsysops WHERE account='{user}';"
+    check_wiki = cabalutil.do_sqlite(query_wiki, 'all')
+    check_user = cabalutil.do_sqlite(query_actor, 'all')
+    if check_wiki and check_user:
         return True
     else:
         return False
