@@ -4,6 +4,13 @@ from urllib.parse import urlparse
 
 
 def report(bot, change):
+    gs = change["user"]
+    query = f"SELECT account FROM globalsysops WHERE account='{gs}';"
+    gs_list = cabalutil.do_sqlite(query, 'all')
+
+    if len(gs_list) == 0:
+        return
+
     do_report = [
         "BLOCK",
         "DELETE",
@@ -71,15 +78,10 @@ def report(bot, change):
         bot.say(report, "#wikimedia-gs-internal")
 
 
-def check(project, user):
+def check(project):
     query_wiki = f"SELECT * FROM GSwikis WHERE project='{project}';"
-    query_actor = f"SELECT account FROM globalsysops WHERE account='{user}';"
     check_wiki = cabalutil.do_sqlite(query_wiki, 'all')
-    check_user = cabalutil.do_sqlite(query_actor, 'all')
-    if check_wiki and check_user:
-        return True
-    else:
-        return False
+    return check_wiki
 
 
 def addGS(trigger):
