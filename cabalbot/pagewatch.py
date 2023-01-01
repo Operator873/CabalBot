@@ -37,12 +37,12 @@ def new_report(bot, change):
         "all"
     )
 
-    for page in all_pages:
+    for page, in all_pages:
         if not fnmatch(str(change["title"]), page):
             continue
         
         reports = cabalutil.do_sqlite(
-            f"""SELECT * FROM {change["wiki"]} where page={page};""",
+            f"""SELECT * FROM {change["wiki"]} where page="{page}";""",
             "all"
         )
         
@@ -66,7 +66,7 @@ def build_report(change, nicks):
     diff = f"{change['server_url']}/w/index.php?diff={str(change['revision']['new'])}"
 
     if change["type"] == "edit":
-        newReport = f"""\x02{change["title"]}\x02 on {change["wiki"]} was edited by \x02{editor}\x02 {diff} {change["comment"]}"""
+        new_report = f"""\x02{change["title"]}\x02 on {change["wiki"]} was edited by \x02{editor}\x02 {diff} {change["comment"]}"""
     
     if change["type"] == "new":
         new_report = f"""\x02{change["title"]}\x02 on {change["wiki"]} was created by \x02{editor}\x02 {diff} {change["comment"]}"""

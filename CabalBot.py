@@ -105,7 +105,7 @@ def dispatch(bot, change):
     if change["type"] == "log":
         # Handles GS Log events
         if (
-            gstools.check(change["wiki"], change["user"])
+            gstools.check(change["wiki"])
             and bot.nick == "Bot873"
         ):
             threading.Thread(target=gstools.report, args=(bot, change)).start()
