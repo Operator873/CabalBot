@@ -1,5 +1,6 @@
 import cabalutil
 import sqlite3
+from fnmatch import fnmatch
 import re
 
 
@@ -30,6 +31,53 @@ def checkcss(change):
         return False
 
 
+def new_report(bot, change):
+    all_pages = cabalutil.do_sqlite(
+        f"""SELECT page FROM {change["wiki"]};""",
+        "all"
+    )
+
+    for page in all_pages:
+        if not fnmatch(str(change["title"]), page):
+            continue
+        
+        reports = cabalutil.do_sqlite(
+            f"""SELECT * FROM {change["wiki"]} where page={page};""",
+            "all"
+        )
+        
+        channels = {}
+        for _p, user, channel, ping in reports:
+            if channel not in channels:
+                channels[channel] = []
+
+            if user not in channels[channel]:
+                if ping == "on":
+                    channels[channel].append(user)
+            
+        for chan in channels:
+            if not cabalutil.check_hush(chan):
+                bot.say(build_report(change, channels[chan]), chan)
+
+
+def build_report(change, nicks):
+    editor = change["user"]
+    editor = editor[:2] + "\u200B" + editor[2:]
+    diff = f"{change['server_url']}/w/index.php?diff={str(change['revision']['new'])}"
+
+    if change["type"] == "edit":
+        newReport = f"""\x02{change["title"]}\x02 on {change["wiki"]} was edited by \x02{editor}\x02 {diff} {change["comment"]}"""
+    
+    if change["type"] == "new":
+        new_report = f"""\x02{change["title"]}\x02 on {change["wiki"]} was created by \x02{editor}\x02 {diff} {change["comment"]}"""
+    
+    if len(nicks) > 0:
+        return f"{' '.join(nicks)} {new_report}"
+    else:
+        return new_report
+
+
+
 def report(bot, change):
 
     proj = change["wiki"]
@@ -39,8 +87,7 @@ def report(bot, change):
     chDiff = chURL + "/w/index.php?diff=" + chRev
     chComment = change["comment"]
     editor = change["user"]
-    space = "\u200B"
-    editor = editor[:2] + space + editor[2:]
+    editor = editor[:2] + "\u200B" + editor[2:]
     check = None
 
     # Band aid SQL injection prevention. Not a pretty fix

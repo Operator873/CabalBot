@@ -15,7 +15,9 @@ def report(bot, change):
         "BLOCK",
         "DELETE",
         "ABUSEFILTER",
-        "MOVE"
+        "MOVE",
+        "PROTECT",
+        "MERGE"
     ]
 
     action = str(change["log_type"]).upper()

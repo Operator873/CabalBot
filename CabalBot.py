@@ -80,7 +80,7 @@ def dispatch(bot, change):
     if change["type"] == "edit" or change["type"] == "new":
         # Check for specific pages in watch
         if pagewatch.check(change):
-            threading.Thread(target=pagewatch.report, args=(bot, change)).start()
+            threading.Thread(target=pagewatch.new_report, args=(bot, change)).start()
 
         # Check for pages watched globally
         if globalwatch.check(change):
