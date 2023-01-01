@@ -173,7 +173,6 @@ def addpage(msg, nick, chan):
                 "Ugh... Something blew up adding the page to the table: "
                 + str(e)
                 + ". "
-                + bot.settings.core.owner
                 + " help me."
             )
             db.close()
@@ -246,7 +245,7 @@ def delpage(msg, nick, chan):
                 + "."
             )
         else:
-            response = "Confirmation failed. Pinging " + bot.settings.core.owner
+            response = "Confirmation failed"
     else:
         response = (
             nick

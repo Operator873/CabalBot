@@ -209,8 +209,7 @@ def watcherAdd(msg, nick, chan):
         except Exception as e:
             response = (
                 "Ugh... Something blew up creating the table. "
-                + bot.settings.core.owner
-                + " help me. "
+                + "help me. "
                 + str(e)
             )
             db.close()
@@ -223,7 +222,6 @@ def watcherAdd(msg, nick, chan):
                 "Ugh... Something blew up finding the new table: ("
                 + check
                 + ") "
-                + bot.settings.core.owner
                 + " help me."
             )
             db.close()
@@ -245,7 +243,6 @@ def watcherAdd(msg, nick, chan):
                 "Ugh... Something blew up adding the page to the table: "
                 + str(e)
                 + ". "
-                + bot.settings.core.owner
                 + " help me."
             )
             db.close()
@@ -300,7 +297,7 @@ def watcherDel(msg, nick, chan):
             )
         except:
             response = (
-                "Ugh... Something blew up. " + bot.settings.core.owner + " help me."
+                "Ugh... Something blew up. help me."
             )
     else:
         response = (
