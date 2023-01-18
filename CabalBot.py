@@ -16,6 +16,7 @@ import logreporter
 import json
 import random
 import threading
+import time
 from sopel import plugin
 from sseclient import SSEClient as EventSource
 
@@ -31,48 +32,62 @@ def setup(bot):
     listen = threading.Thread(target=listener, args=(bot, url, stop_event))
     bot.memory["wikistream_stop"] = stop_event
     bot.memory["wikistream_listener"] = listen
-    bot.memory["wikistream_listener"].start()
+    #bot.memory["wikistream_listener"].start()
 
     # Configure the ORES feed listener, save to bot memory, and start it.
     ores_url = "https://stream.wikimedia.org/v2/stream/revision-score"
     ores = threading.Thread(target=ores_listener, args=(bot, ores_url, stop_event))
     bot.memory["ores_stop"] = stop_event
     bot.memory["ores"] = ores
-    bot.memory["ores"].start()
+    #bot.memory["ores"].start()
 
 
 def listener(bot, url, stop_event):
     # Listen to EventStream for Recent Changes
     while not stop_event.is_set():
-        for event in EventSource(url):
-            # Check for stop flag inside the loop
-            if stop_event.is_set():
-                return
+        try:
+            for event in EventSource(url, headers="CabalBot v2.0 by Operator873 operator873@gmail.com"):
+                # Check for stop flag inside the loop
+                if stop_event.is_set():
+                    return
 
-            if event.event == "message":
-                # Sometimes the EventStream sends garbage, discard if necessary
-                try:
-                    change = json.loads(event.data)
-                    dispatch(bot, change)
-                except ValueError:
-                    continue
+                if event.event == "message":
+                    # Sometimes the EventStream sends garbage, discard if necessary
+                    try:
+                        change = json.loads(event.data)
+                        dispatch(bot, change)
+                    except ValueError:
+                        continue
+        except StopIteration:
+            time.sleep(2)
+            continue
+        except Exception:
+            time.sleep(2)
+            continue
 
 
 def ores_listener(bot, url, stop_event):
     # Listen to EventStream for ORES events
     while not stop_event.is_set():
-        for event in EventSource(url):
-            # Check for stop flag inside the loop
-            if stop_event.is_set():
-                return
+        try:
+            for event in EventSource(url, headers="CabalBot v2.0 by Operator873 operator873@gmail.com"):
+                # Check for stop flag inside the loop
+                if stop_event.is_set():
+                    return
 
-            if event.event == "message":
-                # Sometimes the EventStream sends garbage, discard if necessary
-                try:
-                    change = json.loads(event.data)
-                    ores_dispatch(bot, change)
-                except ValueError:
-                    continue
+                if event.event == "message":
+                    # Sometimes the EventStream sends garbage, discard if necessary
+                    try:
+                        change = json.loads(event.data)
+                        ores_dispatch(bot, change)
+                    except ValueError:
+                        continue
+        except StopIteration:
+            time.sleep(2)
+            continue
+        except Exception:
+            time.sleep(2)
+            continue
 
 
 def dispatch(bot, change):
@@ -80,26 +95,26 @@ def dispatch(bot, change):
     if change["type"] == "edit" or change["type"] == "new":
         # Check for specific pages in watch
         if pagewatch.check(change):
-            threading.Thread(target=pagewatch.new_report, args=(bot, change)).start()
+            pagewatch.new_report(bot, change)
 
         # Check for pages watched globally
         if globalwatch.check(change):
-            threading.Thread(target=globalwatch.report, args=(bot, change)).start()
+            globalwatch.report(bot, change)
 
         # If bot is Bot873, check for cssjs reporting
         if (
             pagewatch.checkcss(change)
             and bot.nick == "Bot873"
         ):
-            threading.Thread(target=pagewatch.cssjs, args=(bot, change)).start()
+            pagewatch.cssjs(bot, change)
 
     # If rc feed is being reported for a project, dispatch report
     if rcfeed.check(change):
-        threading.Thread(target=rcfeed.report, args=(bot, change)).start()
+        rcfeed.report(bot, change)
 
     # If edits from un-confirmed accounts are being reported, dispatch report
     if confirmedfeed.check(change):
-        threading.Thread(target=confirmedfeed.report, args=(bot, change)).start()
+        confirmedfeed(bot, change)
 
     # Dispatch Log events
     if change["type"] == "log":
@@ -108,21 +123,21 @@ def dispatch(bot, change):
             gstools.check(change["wiki"])
             and bot.nick == "Bot873"
         ):
-            threading.Thread(target=gstools.report, args=(bot, change)).start()
+            gstools.reportbot, change)
         
         if logreporter.check_for_log_reporter(change["wiki"]):
-            threading.Thread(target=logreporter.log_report, args=(bot, change)).start()
+            logreporter.log_report(bot, change)
 
         # If abuse filter hits are being reported, dispatch report
         if change["log_type"] == "abusefilter":
             if affeed.check(change):
-                threading.Thread(target=affeed.report, args=(bot, change)).start()
+                affeed.report(bot, change)
 
 
 def ores_dispatch(bot, change):
     # Dispatch ORES reports
     if oresfeed.check(change):
-        threading.Thread(target=oresfeed.report, args=(bot, change)).start()
+        oresfeed.report(bot, change)
 
 
 @plugin.require_admin(message=BOTADMINMSG)
